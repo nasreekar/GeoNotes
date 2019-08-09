@@ -53,12 +53,12 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 fragment = new HomeFragment();
                 break;
 
-            case R.id.navigation_dashboard:
-                // fragment = new DashboardFragment();
+            case R.id.navigation_notes_list:
+                fragment = new NotesListFragment();
                 break;
 
-            case R.id.navigation_notifications:
-                // fragment = new NotificationsFragment();
+            case R.id.navigation_about:
+                fragment = new AboutFragment();
                 break;
         }
 
