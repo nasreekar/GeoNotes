@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class SplashActivity extends AppCompatActivity {
 
-    private static int SPLASH_SCREEN_TIME_OUT = 2500;
+    private static int SPLASH_SCREEN_TIME_OUT = 2000;
     // After completion of 2000 ms, the next activity will get started.
 
     @Override
