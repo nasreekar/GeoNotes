@@ -1,4 +1,4 @@
-package com.abhijith.nanodegree.geonotes;
+package com.abhijith.nanodegree.geonotes.View;
 
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import com.abhijith.nanodegree.geonotes.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import butterknife.BindView;

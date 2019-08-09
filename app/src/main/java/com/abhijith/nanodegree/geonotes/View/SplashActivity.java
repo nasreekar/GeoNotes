@@ -1,4 +1,4 @@
-package com.abhijith.nanodegree.geonotes;
+package com.abhijith.nanodegree.geonotes.View;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,6 +6,8 @@ import android.os.Handler;
 import android.view.WindowManager;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.abhijith.nanodegree.geonotes.R;
 
 public class SplashActivity extends AppCompatActivity {
 

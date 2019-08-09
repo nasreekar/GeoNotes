@@ -1,4 +1,4 @@
-package com.abhijith.nanodegree.geonotes;
+package com.abhijith.nanodegree.geonotes.View;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -7,13 +7,15 @@ import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
 
+import com.abhijith.nanodegree.geonotes.R;
 
-public class NotesListFragment extends Fragment {
+
+public class HomeFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_notes_list, container, false);
+        return inflater.inflate(R.layout.fragment_home, container, false);
     }
 }

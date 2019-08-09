@@ -1,4 +1,4 @@
-package com.abhijith.nanodegree.geonotes;
+package com.abhijith.nanodegree.geonotes.View;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
+
+import com.abhijith.nanodegree.geonotes.R;
 
 
 public class AboutFragment extends Fragment {
