@@ -16,7 +16,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyD2jE-Ovrh01fcjyai__9lv9KwVX6e_8d0"/> // Replace this with your google map api key
+            android:value=""/> // Replace this with your google map api key
 
         <activity android:name=".View.SplashActivity">
             <intent-filter>
