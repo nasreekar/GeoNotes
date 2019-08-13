@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        pushFragment(new HomeFragment());
+        pushFragment(new FootprintFragment());
         navView.setOnNavigationItemSelectedListener(this);
     }
 
@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
         switch (item.getItemId()) {
             case R.id.navigation_home:
-                fragment = new HomeFragment();
+                fragment = new FootprintFragment();
                 break;
 
             case R.id.navigation_notes_list:

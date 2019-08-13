@@ -5,13 +5,13 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context=".View.HomeFragment">
+    tools:context=".View.FootprintFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:text="@string/title_home" />
+        android:text="@string/title_footprint" />
 
 </LinearLayout>
