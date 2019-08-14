@@ -10,6 +10,11 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        // Please ensure you have a valid API KEY for maps
+        // A valid key will need to be entered
+        // to access the key in XML files (layouts and other resources), then add it as a resValue or to access it from Java, add it as buildConfigField
+        resValue 'string', "API_KEY", GeoNotes_ApiKey
     }
     buildTypes {
         release {
