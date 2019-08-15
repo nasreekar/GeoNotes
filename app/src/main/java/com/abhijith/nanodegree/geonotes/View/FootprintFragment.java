@@ -9,6 +9,8 @@ import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -31,8 +33,14 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
-public class FootprintFragment extends Fragment implements OnMapReadyCallback {
+
+public class FootprintFragment extends Fragment implements OnMapReadyCallback, View.OnClickListener {
+
+    @BindView(R.id.currentLocationImageButton)
+    ImageButton btnCurrentLocation;
 
     private static final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 5445;
 
@@ -77,7 +85,10 @@ public class FootprintFragment extends Fragment implements OnMapReadyCallback {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_footprint, container, false);
 
+        ButterKnife.bind(this,rootView);
+
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.frg_footprint);
+        btnCurrentLocation.setOnClickListener(this);
 
         if (mapFragment != null) {
             mapFragment.getMapAsync(this);
@@ -135,5 +146,10 @@ public class FootprintFragment extends Fragment implements OnMapReadyCallback {
         super.onDestroy();
         fusedLocationProviderClient = null;
         mMap = null;
+    }
+
+    @Override
+    public void onClick(View view) {
+        animateCamera(currentLocation);
     }
 }
