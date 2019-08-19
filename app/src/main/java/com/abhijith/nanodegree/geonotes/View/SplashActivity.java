@@ -11,7 +11,7 @@ import com.abhijith.nanodegree.geonotes.R;
 
 public class SplashActivity extends AppCompatActivity {
 
-    private static int SPLASH_SCREEN_TIME_OUT = 2000;
+    private static int SPLASH_SCREEN_TIME_OUT = 2500;
     // After completion of 2000 ms, the next activity will get started.
 
     @Override

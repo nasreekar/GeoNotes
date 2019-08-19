@@ -9,7 +9,6 @@ import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
@@ -43,6 +42,7 @@ public class FootprintFragment extends Fragment implements OnMapReadyCallback, V
     ImageButton btnCurrentLocation;
 
     private static final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 5445;
+    private static final int DEFAULT_ZOOM = 15;
 
     private GoogleMap mMap;
     private FusedLocationProviderClient fusedLocationProviderClient;
@@ -51,41 +51,26 @@ public class FootprintFragment extends Fragment implements OnMapReadyCallback, V
 
     private boolean firstTimeFlag = true;
 
-    public FootprintFragment() {}
+    public FootprintFragment() {
+    }
 
     @Override
     public void onResume() {
         super.onResume();
         if (GooglePlayServicesHelper.isGooglePlayServicesAvailable(this.getContext())) {
-            fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this.getContext());
+            fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
             startCurrentLocationUpdates();
         }
     }
 
-    private final LocationCallback mLocationCallback = new LocationCallback() {
-
-        @Override
-        public void onLocationResult(LocationResult locationResult) {
-            super.onLocationResult(locationResult);
-            if (locationResult.getLastLocation() == null)
-                return;
-            currentLocation = locationResult.getLastLocation();
-            if (firstTimeFlag && mMap != null) {
-                animateCamera(currentLocation);
-                firstTimeFlag = false;
-            }
-            showMarker(currentLocation);
-        }
-    };
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_footprint, container, false);
 
-        ButterKnife.bind(this,rootView);
+        ButterKnife.bind(this, rootView);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.frg_footprint);
         btnCurrentLocation.setOnClickListener(this);
@@ -103,10 +88,8 @@ public class FootprintFragment extends Fragment implements OnMapReadyCallback, V
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-        if (fusedLocationProviderClient != null)
-            fusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
+    public void onClick(View view) {
+        animateCamera(currentLocation);
     }
 
     private void startCurrentLocationUpdates() {
@@ -114,9 +97,9 @@ public class FootprintFragment extends Fragment implements OnMapReadyCallback, V
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationRequest.setInterval(3000);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ActivityCompat.checkSelfPermission(this.getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                    && ActivityCompat.checkSelfPermission(this.getContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this.getActivity(),
+            if (ActivityCompat.checkSelfPermission(getActivity().getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(getActivity().getApplicationContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(getActivity(),
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                         MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
                 return;
@@ -124,6 +107,21 @@ public class FootprintFragment extends Fragment implements OnMapReadyCallback, V
         }
         fusedLocationProviderClient.requestLocationUpdates(locationRequest, mLocationCallback, Looper.myLooper());
     }
+
+    private final LocationCallback mLocationCallback = new LocationCallback() {
+        @Override
+        public void onLocationResult(LocationResult locationResult) {
+            super.onLocationResult(locationResult);
+            if (locationResult.getLastLocation() == null)
+                return;
+            currentLocation = locationResult.getLastLocation();
+            if (firstTimeFlag && mMap != null) {
+                animateCamera(currentLocation);
+                firstTimeFlag = false;
+            }
+            showMarker(currentLocation);
+        }
+    };
 
     private void showMarker(@NonNull Location currentLocation) {
         LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
@@ -138,7 +136,7 @@ public class FootprintFragment extends Fragment implements OnMapReadyCallback, V
 
     @NonNull
     private CameraPosition getCameraPositionWithBearing(LatLng latLng) {
-        return new CameraPosition.Builder().target(latLng).zoom(16).build();
+        return new CameraPosition.Builder().target(latLng).zoom(DEFAULT_ZOOM).build();
     }
 
     @Override
@@ -149,7 +147,9 @@ public class FootprintFragment extends Fragment implements OnMapReadyCallback, V
     }
 
     @Override
-    public void onClick(View view) {
-        animateCamera(currentLocation);
+    public void onStop() {
+        super.onStop();
+        if (fusedLocationProviderClient != null)
+            fusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
     }
 }
