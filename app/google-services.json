@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "374542513018",
+    "firebase_url": "https://geonotes-250509.firebaseio.com",
+    "project_id": "geonotes-250509",
+    "storage_bucket": "geonotes-250509.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:374542513018:android:910b6e3ea42361d2",
+        "android_client_info": {
+          "package_name": "com.abhijith.nanodegree.geonotes"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "374542513018-2pi69atn8uf1c5eds69ak7bdoe5tcpf8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDTKdVEydIwhCOfjrgh9zuHJ3ZclQ8uVEo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "374542513018-2pi69atn8uf1c5eds69ak7bdoe5tcpf8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
