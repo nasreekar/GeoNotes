@@ -53,7 +53,6 @@ public class FootprintFragment extends Fragment implements OnMapReadyCallback {
     ImageView mGps;
 
     private GoogleMap mMap;
-    private FusedLocationProviderClient mfusedLocationProviderClient;
     private Location currentLocation;
 
     private boolean mLocationPersmissionsGranted = false;
@@ -153,7 +152,7 @@ public class FootprintFragment extends Fragment implements OnMapReadyCallback {
 
     private void getDeviceLocation() {
         Log.d(TAG, "getDeviceLocation: getting device's current location");
-        mfusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this.getActivity());
+        FusedLocationProviderClient mfusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this.getActivity());
         try {
             if (mLocationPersmissionsGranted) {
                 Task location = mfusedLocationProviderClient.getLastLocation();
