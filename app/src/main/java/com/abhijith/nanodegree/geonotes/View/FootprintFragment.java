@@ -29,6 +29,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
@@ -134,6 +135,14 @@ public class FootprintFragment extends Fragment implements OnMapReadyCallback {
 
             init();
         }
+
+        googleMap.setOnInfoWindowClickListener(marker -> {
+            Log.d(TAG, "setOnInfoWindowClickListener: Marker window clicked");
+            Toast.makeText(getActivity(), marker.getTitle(), Toast.LENGTH_SHORT).show();
+            // handle the clicked marker object
+            // add bottomsheet to show the notes / dialog
+        });
+
     }
 
     private void init() {
