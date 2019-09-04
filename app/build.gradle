@@ -42,7 +42,7 @@ dependencies {
 
     // lottie
     implementation 'com.airbnb.android:lottie:3.0.7'
-    //https://assets2.lottiefiles.com/datafiles/uihIaQIvWBfYL9a/data.json
+    // https://assets2.lottiefiles.com/datafiles/uihIaQIvWBfYL9a/data.json
 
     // Binding
     implementation 'com.jakewharton:butterknife:10.1.0'
@@ -51,7 +51,9 @@ dependencies {
     // Google play services
     implementation 'com.google.android.gms:play-services-maps:17.0.0' // maps
     implementation 'com.google.android.gms:play-services-location:17.0.0'// locations
+    implementation 'com.google.android.gms:play-services-places:17.0.0' // places
+    implementation 'com.google.android.libraries.places:places:2.0.0'
 
     // Firebase
-    implementation 'com.google.firebase:firebase-core:17.1.0' // core
+    implementation 'com.google.firebase:firebase-core:17.2.0' // core
 }

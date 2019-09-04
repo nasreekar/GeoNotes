@@ -31,6 +31,7 @@
         </activity>
     </application>
 
+    <!-- OpenGL ES for rendering the maps -->
     <uses-feature
         android:glEsVersion="0x00020000"
         android:required="true"/>

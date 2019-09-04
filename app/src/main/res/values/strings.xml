@@ -7,5 +7,9 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="installGooglePlay_error">Please Install google play services to use this application</string>
+    <string name="searchbar_hint">Enter address, City or Zip Code</string>
+    <string name="gps_content">GPS</string>
+    <string name="current_location_not_found">Unable to get current location</string>
+    <string name="error_retrieving_location_coordinates">Error Getting coordinates of the location. Try again later.</string>
 
 </resources>
