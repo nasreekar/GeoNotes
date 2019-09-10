@@ -11,5 +11,6 @@
     <string name="gps_content">GPS</string>
     <string name="current_location_not_found">Unable to get current location</string>
     <string name="error_retrieving_location_coordinates">Error Getting coordinates of the location. Try again later.</string>
+    <string name="app_logo">App Logo</string>
 
 </resources>

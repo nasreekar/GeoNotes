@@ -1,4 +1,4 @@
-package com.abhijith.nanodegree.geonotes.Model;
+package com.abhijith.nanodegree.geonotes.Utils;
 
 import android.content.Context;
 import android.util.Log;
