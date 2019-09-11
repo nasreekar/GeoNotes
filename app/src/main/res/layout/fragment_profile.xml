@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="@string/title_about" />
+        android:text="@string/title_profile" />
 
     <Button
         android:id="@+id/btn_logout"
@@ -21,6 +21,6 @@
         android:layout_marginRight="20dp"
         android:layout_marginLeft="20dp"
         android:layout_alignParentBottom="true"
-        android:text="LOGOUT"/>
+        android:text="@string/logout"/>
 
 </RelativeLayout>

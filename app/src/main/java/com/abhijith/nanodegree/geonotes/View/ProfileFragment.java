@@ -10,48 +10,40 @@ import android.widget.Button;
 import androidx.fragment.app.Fragment;
 
 import com.abhijith.nanodegree.geonotes.R;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.auth.FirebaseAuth;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class AboutFragment extends Fragment {
+public class ProfileFragment extends Fragment {
 
     @BindView(R.id.btn_logout)
     Button logout;
-
-    private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        mAuth.addAuthStateListener(mAuthListener);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_about, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
 
         ButterKnife.bind(this, rootView);
 
         logout.setOnClickListener(view -> logout());
 
-        mAuth = FirebaseAuth.getInstance();
-        mAuthListener = firebaseAuth -> {
-            if (firebaseAuth.getCurrentUser() == null) {
-                startActivity(new Intent(getActivity(), LoginActivity.class));
-            }
-        };
-
-
         return rootView;
     }
 
     private void logout() {
-        mAuth.signOut();
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+        GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(getActivity(), gso);
+        mGoogleSignInClient.signOut();
+        FirebaseAuth.getInstance().signOut();
+        startActivity(new Intent(getContext(), LoginActivity.class));
     }
 }
