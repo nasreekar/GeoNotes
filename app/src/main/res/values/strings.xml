@@ -13,5 +13,13 @@
     <string name="error_retrieving_location_coordinates">Error Getting coordinates of the location. Try again later.</string>
     <string name="app_logo">App Logo</string>
     <string name="logout">Logout</string>
+    <string name="or_login_screen">OR</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="forgot_password">Forgot password</string>
+    <string name="email_hint">E-mail</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="already_a_member">Already a member?</string>
+    <string name="password_hint">Password</string>
 
 </resources>

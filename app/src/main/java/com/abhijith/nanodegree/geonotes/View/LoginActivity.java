@@ -2,6 +2,11 @@ package com.abhijith.nanodegree.geonotes.View;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -38,6 +43,24 @@ public class LoginActivity extends AppCompatActivity {
     @BindView(R.id.sign_in_button)
     SignInButton signIn;
 
+    @BindView(R.id.btn_login)
+    Button loginBtn;
+
+    @BindView(R.id.btn_register)
+    Button register;
+
+    @BindView(R.id.btn_forgotPassword)
+    Button forgotPassword;
+
+    @BindView(R.id.et_email)
+    EditText etEmail;
+
+    @BindView(R.id.et_password)
+    EditText etPassword;
+
+    @BindView(R.id.progressBar)
+    ProgressBar progressBar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +81,44 @@ public class LoginActivity extends AppCompatActivity {
 
         signIn.setOnClickListener(view -> signIn());
 
+        register.setOnClickListener(view -> {
+            startActivity(new Intent(this, RegisterActivity.class));
+        });
+
+        loginBtn.setOnClickListener(view -> loginUserAccount());
+
+    }
+
+    private void loginUserAccount() {
+
+        progressBar.setVisibility(View.VISIBLE);
+
+        String email, password;
+        email = etEmail.getText().toString();
+        password = etPassword.getText().toString();
+
+        if (TextUtils.isEmpty(email)) {
+            Toast.makeText(getApplicationContext(), "Please enter email...", Toast.LENGTH_LONG).show();
+            return;
+        }
+        if (TextUtils.isEmpty(password)) {
+            Toast.makeText(getApplicationContext(), "Please enter password!", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        firebaseAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(getApplicationContext(), "Login successful!", Toast.LENGTH_LONG).show();
+                        progressBar.setVisibility(View.GONE);
+
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        startActivity(intent);
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Login failed! Please try again later", Toast.LENGTH_LONG).show();
+                        progressBar.setVisibility(View.GONE);
+                    }
+                });
     }
 
     @Override
@@ -78,7 +139,7 @@ public class LoginActivity extends AppCompatActivity {
             if (task.isSuccessful()) {
                 sendToMainActivity();
             } else {
-                Toast.makeText(getApplicationContext(),"Auth Error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Auth Error", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -101,6 +162,4 @@ public class LoginActivity extends AppCompatActivity {
             sendToMainActivity();
         }
     }
-
-
 }

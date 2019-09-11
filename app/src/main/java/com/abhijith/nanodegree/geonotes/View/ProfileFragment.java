@@ -44,6 +44,6 @@ public class ProfileFragment extends Fragment {
         GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(getActivity(), gso);
         mGoogleSignInClient.signOut();
         FirebaseAuth.getInstance().signOut();
-        startActivity(new Intent(getContext(), LoginActivity.class));
+        startActivity(new Intent(getActivity(), LoginActivity.class));
     }
 }
