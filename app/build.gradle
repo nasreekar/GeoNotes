@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 29
-    buildToolsVersion "29.0.1"
+    buildToolsVersion "29.0.2"
     defaultConfig {
         applicationId "com.abhijith.nanodegree.geonotes"
         minSdkVersion 16
@@ -15,6 +15,8 @@ android {
         // A valid key will need to be entered
         // to access the key in XML files (layouts and other resources), then add it as a resValue or to access it from Java, add it as buildConfigField
         resValue 'string', "API_KEY", GeoNotes_ApiKey
+        resValue 'string', "WEB_CLIENT_ID", Geonotes_WebClientId
+        resValue 'string', "WEB_CLIENT_SECRET", Geonotes_WebClientSecret
     }
     buildTypes {
         release {
@@ -31,10 +33,10 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    implementation 'androidx.vectordrawable:vectordrawable:1.0.1'
+    implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
@@ -56,4 +58,8 @@ dependencies {
 
     // Firebase
     implementation 'com.google.firebase:firebase-core:17.2.0' // core
+    implementation 'com.google.firebase:firebase-auth:19.0.0'
+    implementation 'com.google.android.gms:play-services-auth:17.0.0'
 }
+
+apply plugin: 'com.google.gms.google-services'
