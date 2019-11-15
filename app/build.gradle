@@ -54,11 +54,13 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:17.0.0' // maps
     implementation 'com.google.android.gms:play-services-location:17.0.0'// locations
     implementation 'com.google.android.gms:play-services-places:17.0.0' // places
-    implementation 'com.google.android.libraries.places:places:2.0.0'
+    implementation 'com.google.android.libraries.places:places:2.1.0'
+    implementation 'com.google.maps.android:android-maps-utils:0.5' // maps utilities like clusters, custom markers
+
 
     // Firebase
-    implementation 'com.google.firebase:firebase-core:17.2.0' // core
-    implementation 'com.google.firebase:firebase-auth:19.0.0'
+    implementation 'com.google.firebase:firebase-core:17.2.1' // core
+    implementation 'com.google.firebase:firebase-auth:19.1.0'
     implementation 'com.google.android.gms:play-services-auth:17.0.0'
 }
 

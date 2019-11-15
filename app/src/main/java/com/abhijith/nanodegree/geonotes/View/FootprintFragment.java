@@ -1,6 +1,7 @@
 package com.abhijith.nanodegree.geonotes.View;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -10,6 +11,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,8 +21,8 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
-import com.abhijith.nanodegree.geonotes.Utils.GooglePlayServicesHelper;
 import com.abhijith.nanodegree.geonotes.R;
+import com.abhijith.nanodegree.geonotes.Utils.GooglePlayServicesHelper;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -29,6 +32,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
@@ -111,7 +115,9 @@ public class FootprintFragment extends Fragment implements OnMapReadyCallback {
             autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME));
         }
 
-        mapFragment.getMapAsync(this);
+        if (mapFragment != null) {
+            mapFragment.getMapAsync(this);
+        }
     }
 
     @Override
@@ -137,9 +143,7 @@ public class FootprintFragment extends Fragment implements OnMapReadyCallback {
 
         googleMap.setOnInfoWindowClickListener(marker -> {
             Log.d(TAG, "setOnInfoWindowClickListener: Marker window clicked");
-            Toast.makeText(getActivity(), marker.getTitle(), Toast.LENGTH_SHORT).show();
-            // handle the clicked marker object
-            // add bottomsheet to show the notes / dialog
+            Toast.makeText(this.getContext(), marker.getTitle(), Toast.LENGTH_SHORT).show();
         });
 
     }
@@ -162,21 +166,51 @@ public class FootprintFragment extends Fragment implements OnMapReadyCallback {
 
         });
 
-       /* mSearchText.setOnEditorActionListener((textView, actionId, keyEvent) -> {
-            if (actionId == EditorInfo.IME_ACTION_SEARCH || actionId == EditorInfo.IME_ACTION_DONE
-                    || keyEvent.getAction() == KeyEvent.ACTION_DOWN
-                    || keyEvent.getAction() == KeyEvent.KEYCODE_ENTER) {
-
-                // execute method for searching
-                geoLocate();
-            }
-            return false;
-        });*/
-
         mGps.setOnClickListener(view -> {
             Log.d(TAG, "onClick: clicked gps icon");
             getDeviceLocation();
         });
+
+        mMap.setOnMapClickListener(this::showMarker);
+
+        mMap.setOnMarkerClickListener(marker -> {
+            if (marker.getTitle() == null) {
+                displayNoteDialog(marker.getPosition());
+            } else {
+                displayMarkerWithNotes(marker);
+            }
+            return true;
+        });
+    }
+
+    private void showMarker(LatLng latLng) {
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position(latLng);
+        mMap.addMarker(new MarkerOptions().position(latLng));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+    }
+
+    private void displayNoteDialog(LatLng latLng) {
+        final AlertDialog dialogBuilder = new AlertDialog.Builder(this.getContext()).create();
+        LayoutInflater inflater = this.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.custom_dialog, null);
+
+        final EditText etNotes = dialogView.findViewById(R.id.edt_comment);
+        Button positiveBtn = dialogView.findViewById(R.id.buttonSubmit);
+        Button negativeBtn = dialogView.findViewById(R.id.buttonCancel);
+
+        negativeBtn.setOnClickListener(view -> dialogBuilder.dismiss());
+        positiveBtn.setOnClickListener(view -> {
+            // DO SOMETHINGS
+            dialogBuilder.dismiss();
+        });
+
+        dialogBuilder.setView(dialogView);
+        dialogBuilder.show();
+    }
+
+    private void displayMarkerWithNotes(Marker marker) {
+        Toast.makeText(this.getContext(), marker.getTitle(), Toast.LENGTH_SHORT).show();
     }
 
     private void geoLocate() {
@@ -199,6 +233,7 @@ public class FootprintFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
+    // Getting the base location of the user
     private void getDeviceLocation() {
         Log.d(TAG, "getDeviceLocation: getting device's current location");
         FusedLocationProviderClient mfusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this.getActivity());

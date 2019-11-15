@@ -5,6 +5,7 @@
 
     <!-- Margins -->
     <dimen name="margin_24dp">24dp</dimen>
+    <dimen name="space_8">8dp</dimen>
 
     <!-- Font Sizes -->
     <dimen name="font_32sp">32sp</dimen> <!-- Splash screen text -->
