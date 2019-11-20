@@ -4,8 +4,17 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
 
     <!-- Margins -->
-    <dimen name="margin_24dp">24dp</dimen>
-    <dimen name="space_8">8dp</dimen>
+    <dimen name="dp_8">8dp</dimen>
+    <dimen name="dp_16">16dp</dimen>
+    <dimen name="dp_24">24dp</dimen>
+    <dimen name="dp_32">32dp</dimen>
+    <dimen name="dp_40">40dp</dimen>
+    <dimen name="dp_48">48dp</dimen>
+    <dimen name="dp_56">56dp</dimen>
+    <dimen name="dp_64">64dp</dimen>
+    <dimen name="dp_72">72dp</dimen>
+    <dimen name="dp_80">80dp</dimen>
+    <dimen name="dp_160">160dp</dimen>
 
     <!-- Font Sizes -->
     <dimen name="font_32sp">32sp</dimen> <!-- Splash screen text -->

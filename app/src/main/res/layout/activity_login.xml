@@ -82,7 +82,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/iv_appLogo"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/margin_24dp"
+        android:layout_marginTop="@dimen/dp_24"
         android:text="@string/app_name" />
 
     <com.google.android.gms.common.SignInButton
