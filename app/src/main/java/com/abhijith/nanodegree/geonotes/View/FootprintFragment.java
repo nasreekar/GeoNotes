@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -41,9 +40,12 @@ import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -60,6 +62,12 @@ public class FootprintFragment extends Fragment implements OnMapReadyCallback {
     @BindView(R.id.ic_gps)
     ImageView mGps;
 
+    private EditText title;
+    private EditText description;
+    private TextView date;
+    private TextView formLocation;
+    String finalLocation;
+
     private GoogleMap mMap;
     private Location currentLocation;
 
@@ -68,6 +76,10 @@ public class FootprintFragment extends Fragment implements OnMapReadyCallback {
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final int LOCATIONS_PERMISSIONS_REQUEST = 5445;
+
+    private AlertDialog.Builder dialog;
+    private LayoutInflater inflater;
+    private View dialogView;
 
     private AutocompleteSupportFragment autocompleteFragment;
 
@@ -171,42 +183,56 @@ public class FootprintFragment extends Fragment implements OnMapReadyCallback {
             getDeviceLocation();
         });
 
-        mMap.setOnMapClickListener(this::showMarker);
+        mMap.setOnMapClickListener(this::displayNoteDialog);
 
         mMap.setOnMarkerClickListener(marker -> {
-            if (marker.getTitle() == null) {
-                displayNoteDialog(marker.getPosition());
-            } else {
-                displayMarkerWithNotes(marker);
-            }
+            displayMarkerWithNotes(marker);
             return true;
         });
     }
 
-    private void showMarker(LatLng latLng) {
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(latLng);
-        mMap.addMarker(new MarkerOptions().position(latLng));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-    }
 
     private void displayNoteDialog(LatLng latLng) {
-        final AlertDialog dialogBuilder = new AlertDialog.Builder(this.getContext()).create();
-        LayoutInflater inflater = this.getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.custom_dialog, null);
+        dialog = new AlertDialog.Builder(this.getContext());
+        inflater = this.getLayoutInflater();
+        dialogView = inflater.inflate(R.layout.custom_dialog, null);
+        dialog.setView(dialogView);
+        dialog.setCancelable(true);
+        dialog.setIcon(R.drawable.geonotes_logo_round);
+        dialog.setTitle("Add Notes");
 
-        final EditText etNotes = dialogView.findViewById(R.id.edt_comment);
-        Button positiveBtn = dialogView.findViewById(R.id.buttonSubmit);
-        Button negativeBtn = dialogView.findViewById(R.id.buttonCancel);
+        title = dialogView.findViewById(R.id.et_title);
+        description = dialogView.findViewById(R.id.et_description);
+        date = dialogView.findViewById(R.id.tv_date);
+        formLocation = dialogView.findViewById(R.id.tv_location);
 
-        negativeBtn.setOnClickListener(view -> dialogBuilder.dismiss());
-        positiveBtn.setOnClickListener(view -> {
-            // DO SOMETHINGS
-            dialogBuilder.dismiss();
+        String currentDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.UK).format(Calendar.getInstance().getTime());
+        date.setText(currentDate);
+
+        formLocation.setText(getLocationDetails(latLng));
+
+        clearFields();
+
+        dialog.setPositiveButton("SUBMIT", (dialog, which) -> {
+
+            // add notes in db
+
+            MarkerOptions markerOptions = new MarkerOptions();
+            markerOptions.position(latLng);
+            markerOptions.title(title.toString());
+            mMap.addMarker(new MarkerOptions().position(latLng));
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+            dialog.dismiss();
         });
 
-        dialogBuilder.setView(dialogView);
-        dialogBuilder.show();
+        dialog.setNegativeButton("CANCEL", (dialog, which) -> dialog.dismiss());
+
+        dialog.show();
+    }
+
+    private void clearFields() {
+        title.setText(null);
+        description.setText(null);
     }
 
     private void displayMarkerWithNotes(Marker marker) {
@@ -256,6 +282,43 @@ public class FootprintFragment extends Fragment implements OnMapReadyCallback {
         } catch (SecurityException e) {
             Log.e(TAG, "getDeviceLocation: SecurityException");
         }
+    }
+
+    private String getLocationDetails(LatLng latLng) {
+        Geocoder geocoder = new Geocoder(this.getContext());
+
+        List<Address> addresses = null;
+
+        try {
+            addresses = geocoder.getFromLocation(
+                    latLng.latitude,
+                    latLng.longitude,
+                    1);
+        } catch (IOException ioException) {
+            // Catch network or other I/O problems.
+            finalLocation = getString(R.string.service_not_available);
+            Log.e(TAG, finalLocation, ioException);
+        } catch (IllegalArgumentException illegalArgumentException) {
+            // Catch invalid latitude or longitude values.
+            finalLocation = getString(R.string.invalid_lat_long_used);
+            Log.e(TAG, finalLocation + ". " +
+                    "Latitude = " + latLng.latitude +
+                    ", Longitude = " +
+                    latLng.longitude, illegalArgumentException);
+        }
+
+        // Handle case where no address was found.
+        if (addresses == null || addresses.size() == 0) {
+            if (finalLocation.isEmpty()) {
+                finalLocation = getString(R.string.no_address_found);
+                Log.e(TAG, finalLocation);
+            }
+        } else {
+            Address address = addresses.get(0);
+            Log.i(TAG, getString(R.string.address_found));
+            finalLocation = address.getAddressLine(0);
+        }
+        return finalLocation;
     }
 
     private void getLocationPermissions() {

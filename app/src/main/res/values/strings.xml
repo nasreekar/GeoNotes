@@ -21,5 +21,9 @@
     <string name="sign_up">Sign Up</string>
     <string name="already_a_member">Already a member?</string>
     <string name="password_hint">Password</string>
+    <string name="service_not_available">Service Not Available</string>
+    <string name="invalid_lat_long_used">Invalid location details provided</string>
+    <string name="no_address_found">No Address Found</string>
+    <string name="address_found">Address Found</string>
 
 </resources>
