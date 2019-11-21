@@ -7,6 +7,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,7 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
+import com.abhijith.nanodegree.geonotes.Model.Notes;
 import com.abhijith.nanodegree.geonotes.R;
 import com.abhijith.nanodegree.geonotes.Utils.GooglePlayServicesHelper;
 import com.google.android.gms.common.api.Status;
@@ -38,6 +40,8 @@ import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -62,11 +66,7 @@ public class FootprintFragment extends Fragment implements OnMapReadyCallback {
     @BindView(R.id.ic_gps)
     ImageView mGps;
 
-    private EditText title;
-    private EditText description;
-    private TextView date;
-    private TextView formLocation;
-    String finalLocation;
+    private String finalLocation;
 
     private GoogleMap mMap;
     private Location currentLocation;
@@ -77,12 +77,12 @@ public class FootprintFragment extends Fragment implements OnMapReadyCallback {
     private static final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final int LOCATIONS_PERMISSIONS_REQUEST = 5445;
 
-    private AlertDialog.Builder dialog;
-    private LayoutInflater inflater;
-    private View dialogView;
-
     private AutocompleteSupportFragment autocompleteFragment;
 
+    private Geocoder geocoder;
+
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
     public FootprintFragment() {
     }
@@ -168,7 +168,7 @@ public class FootprintFragment extends Fragment implements OnMapReadyCallback {
             public void onPlaceSelected(Place place) {
                 Log.i(TAG, "Place: " + place.getName() + ", " + place.getId());
                 mSearchText.setText(place.getName());
-                geoLocate();
+                geoLocateByPlaceName();
             }
 
             @Override
@@ -193,70 +193,60 @@ public class FootprintFragment extends Fragment implements OnMapReadyCallback {
 
 
     private void displayNoteDialog(LatLng latLng) {
-        dialog = new AlertDialog.Builder(this.getContext());
-        inflater = this.getLayoutInflater();
-        dialogView = inflater.inflate(R.layout.custom_dialog, null);
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this.getContext());
+        LayoutInflater inflater = this.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.custom_dialog, null);
         dialog.setView(dialogView);
         dialog.setCancelable(true);
         dialog.setIcon(R.drawable.geonotes_logo_round);
         dialog.setTitle("Add Notes");
 
-        title = dialogView.findViewById(R.id.et_title);
-        description = dialogView.findViewById(R.id.et_description);
-        date = dialogView.findViewById(R.id.tv_date);
-        formLocation = dialogView.findViewById(R.id.tv_location);
+        EditText title = dialogView.findViewById(R.id.et_title);
+        EditText description = dialogView.findViewById(R.id.et_description);
+        TextView date = dialogView.findViewById(R.id.tv_date);
+        TextView formLocation = dialogView.findViewById(R.id.tv_location);
 
         String currentDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.UK).format(Calendar.getInstance().getTime());
         date.setText(currentDate);
 
-        formLocation.setText(getLocationDetails(latLng));
+        String location = getLocationDetails(latLng);
+        formLocation.setText(location);
+        String email = mAuth.getCurrentUser().getEmail();
 
-        clearFields();
+        dialog.setPositiveButton("SUBMIT", (alert, which) -> {
 
-        dialog.setPositiveButton("SUBMIT", (dialog, which) -> {
+            String heading = title.getText().toString().trim(); //title
+            String desc = description.getText().toString().trim(); //description
 
-            // add notes in db
+            if (TextUtils.isEmpty(heading)) {
+                Toast.makeText(this.getActivity(), "Title cannot be empty", Toast.LENGTH_SHORT).show();
+            } else {
+                Notes notes = new Notes(heading, desc, email, currentDate, location, String.valueOf(latLng.latitude), String.valueOf(latLng.longitude));
 
-            MarkerOptions markerOptions = new MarkerOptions();
-            markerOptions.position(latLng);
-            markerOptions.title(title.toString());
-            mMap.addMarker(new MarkerOptions().position(latLng));
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-            dialog.dismiss();
+                db.collection("notes")
+                        .add(notes)
+                        .addOnSuccessListener(documentReference -> {
+                            Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
+                            MarkerOptions markerOptions = new MarkerOptions();
+                            markerOptions.position(latLng);
+                            markerOptions.title(title.toString());
+                            alert.dismiss();
+                            Toast.makeText(this.getActivity(), "Note added Successfully", Toast.LENGTH_SHORT).show();
+                            mMap.addMarker(new MarkerOptions().position(latLng));
+                            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                        })
+                        .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
+
+            }
         });
 
-        dialog.setNegativeButton("CANCEL", (dialog, which) -> dialog.dismiss());
+        dialog.setNegativeButton("CANCEL", (alert, which) -> alert.dismiss());
 
         dialog.show();
     }
 
-    private void clearFields() {
-        title.setText(null);
-        description.setText(null);
-    }
-
     private void displayMarkerWithNotes(Marker marker) {
         Toast.makeText(this.getContext(), marker.getTitle(), Toast.LENGTH_SHORT).show();
-    }
-
-    private void geoLocate() {
-        Log.d(TAG, "geoLocate: geolocating");
-        String searchString = mSearchText.getText().toString();
-        Log.d(TAG, "geoLocate: searchString: " + searchString);
-        Geocoder geocoder = new Geocoder(this.getActivity());
-        List<Address> list = new ArrayList<>();
-        try {
-            list = geocoder.getFromLocationName(searchString, 1);
-        } catch (IOException e) {
-            Log.d(TAG, "geoLocate: IOException: " + e.getMessage());
-            Toast.makeText(getActivity(), getString(R.string.error_retrieving_location_coordinates), Toast.LENGTH_SHORT).show();
-        }
-
-        if (list.size() > 0) {
-            Address address = list.get(0);
-            Log.d(TAG, "geoLocate: found a location: " + address.toString());
-            moveCamera(new LatLng(address.getLatitude(), address.getLongitude()), address.getAddressLine(0));
-        }
     }
 
     // Getting the base location of the user
@@ -284,8 +274,31 @@ public class FootprintFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
+    private void geoLocateByPlaceName() {
+        Log.d(TAG, "geoLocateByPlaceName: geolocating");
+        String searchString = mSearchText.getText().toString();
+        Log.d(TAG, "geoLocateByPlaceName: searchString: " + searchString);
+        geocoder = new Geocoder(this.getActivity());
+        List<Address> list = new ArrayList<>();
+        try {
+            list = geocoder.getFromLocationName(searchString, 1);
+        } catch (IOException e) {
+            Log.d(TAG, "geoLocateByPlaceName: IOException: " + e.getMessage());
+            Toast.makeText(getActivity(), getString(R.string.error_retrieving_location_coordinates), Toast.LENGTH_SHORT).show();
+        }
+
+        if (list.size() > 0) {
+            Address address = list.get(0);
+            Log.d(TAG, "geoLocateByPlaceName: found a location: " + address.toString());
+            moveCamera(new LatLng(address.getLatitude(), address.getLongitude()), address.getAddressLine(0));
+        } else {
+            Log.d(TAG, "geoLocateByPlaceName: didnt find a location ");
+            Toast.makeText(this.getActivity(), "Sorry! Something went wrong. Please try again later", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     private String getLocationDetails(LatLng latLng) {
-        Geocoder geocoder = new Geocoder(this.getContext());
+        geocoder = new Geocoder(this.getActivity());
 
         List<Address> addresses = null;
 

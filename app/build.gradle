@@ -10,6 +10,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
 
         // Please ensure you have a valid API KEY for maps
         // A valid key will need to be entered
@@ -62,7 +63,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:17.2.1' // core
     implementation 'com.google.firebase:firebase-auth:19.1.0'
     implementation 'com.google.android.gms:play-services-auth:17.0.0'
-    // implementation 'com.google.firebase:firebase-firestore:21.3.0'
+    implementation 'com.google.firebase:firebase-firestore:21.3.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

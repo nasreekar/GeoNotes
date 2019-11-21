@@ -9,7 +9,6 @@ import java.io.Serializable;
 
 public class Notes implements Serializable, ClusterItem {
 
-    private String id;
     private String email;
     private String title;
     private String description;
@@ -17,14 +16,6 @@ public class Notes implements Serializable, ClusterItem {
     private String location;
     private String latitude;
     private String longitute;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getEmail() {
         return email;
@@ -36,7 +27,7 @@ public class Notes implements Serializable, ClusterItem {
 
     @Override
     public LatLng getPosition() {
-        if(!TextUtils.isEmpty(latitude) && !TextUtils.isEmpty(longitute)) {
+        if (!TextUtils.isEmpty(latitude) && !TextUtils.isEmpty(longitute)) {
             return new LatLng(Double.valueOf(latitude), Double.valueOf(longitute));
         }
         return null;
@@ -49,7 +40,7 @@ public class Notes implements Serializable, ClusterItem {
 
     @Override
     public String getSnippet() {
-        return String.format("%s%n%n%s%s", description, "user: ",email);
+        return String.format("%s%n%n%s%s", description, "user: ", email);
     }
 
     public void setTitle(String title) {
@@ -96,8 +87,7 @@ public class Notes implements Serializable, ClusterItem {
         this.longitute = longitute;
     }
 
-    public Notes(String id,String title, String description,String email, String date, String location, String latitude, String longitute) {
-        this.id = id;
+    public Notes(String title, String description, String email, String date, String location, String latitude, String longitute) {
         this.email = email;
         this.title = title;
         this.description = description;
