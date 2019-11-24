@@ -70,12 +70,6 @@ public class FootprintFragment extends Fragment implements OnMapReadyCallback {
     @BindView(R.id.ic_gps)
     ImageView mGps;
 
-    @BindView(R.id.ic_my_notes)
-    ImageView myNotes;
-
-    @BindView(R.id.ic_all_notes)
-    ImageView allNotes;
-
     private String finalLocation;
 
     private GoogleMap mMap;
@@ -96,7 +90,6 @@ public class FootprintFragment extends Fragment implements OnMapReadyCallback {
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
     private List<Notes> allNotesFromDb = new ArrayList<>();
-    private List<Notes> myListitems = new ArrayList<>();
 
     public FootprintFragment() {
     }
@@ -191,17 +184,7 @@ public class FootprintFragment extends Fragment implements OnMapReadyCallback {
             getDeviceLocation();
         });
 
-        getMyNotes();
-
-        myNotes.setOnClickListener(view -> {
-            Log.d(TAG, "onClick: clicked myNotes icon");
-            getMyNotes();
-        });
-
-        allNotes.setOnClickListener(view -> {
-            Log.d(TAG, "onClick: clicked all notes icon");
-            getAllNotes();
-        });
+        getAllNotes();
 
         mMap.setOnMapClickListener(this::displayNoteDialog);
 
@@ -211,27 +194,7 @@ public class FootprintFragment extends Fragment implements OnMapReadyCallback {
         });
     }
 
-    private void getMyNotes() {
-        myListitems.clear();
-        notesRef.whereEqualTo("email", mAuth.getCurrentUser().getEmail()).get()
-                .addOnSuccessListener(documentSnapshots -> {
-                    if (documentSnapshots.isEmpty()) {
-                        Log.d(TAG, "onSuccess: LIST EMPTY");
-                        return;
-                    } else {
-                        List<Notes> types = documentSnapshots.toObjects(Notes.class);
-                        myListitems.addAll(types);
-                        showClusterMapView(myListitems, mMap);
-                    }
-
-                })
-                .addOnFailureListener(e -> {
-                    Log.d(TAG, "Error receiving all documents to show on map");
-                });
-    }
-
     private void getAllNotes() {
-        allNotesFromDb.clear();
         notesRef.get()
                 .addOnSuccessListener(documentSnapshots -> {
                     if (documentSnapshots.isEmpty()) {
@@ -244,9 +207,7 @@ public class FootprintFragment extends Fragment implements OnMapReadyCallback {
                     }
 
                 })
-                .addOnFailureListener(e -> {
-                    Log.d(TAG, "Error receiving all documents to show on map");
-                });
+                .addOnFailureListener(e -> Log.d(TAG, "Error receiving all documents to show on map"));
     }
 
 
@@ -453,7 +414,7 @@ public class FootprintFragment extends Fragment implements OnMapReadyCallback {
         // moveCamera(new LatLng(Constants.DEFAULT_LATITUDE, Constants.DEFAULT_LONGITUDE), Constants.DEFAULT_TITLE);
 
         ClusterManager<Notes> mClusterManager = new ClusterManager<>(getContext(), mMap);
-        mClusterManager.setRenderer(new MarkerClusterRenderer(this.getContext(), mMap, mClusterManager));
+        mClusterManager.setRenderer(new MarkerClusterRenderer(getContext(), mMap, mClusterManager, mAuth.getCurrentUser().getEmail()));
         mMap.setOnCameraIdleListener(mClusterManager);
         mMap.setOnMarkerClickListener(mClusterManager);
         mMap.setOnInfoWindowClickListener(marker -> {

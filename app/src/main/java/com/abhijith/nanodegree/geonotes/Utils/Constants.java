@@ -14,7 +14,7 @@ public class Constants {
     public static final String DEFAULT_TITLE = "GeoNotes";
     public static final float DEFAULT_ZOOM = 15f;
 
-    public static final int MARKER_DIMENSION = 72;
+    public static final int MARKER_DIMENSION = 80;
 
 
 }
