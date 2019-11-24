@@ -1,17 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    android:orientation="vertical"
     tools:context=".View.FootprintFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="@string/title_notesList" />
+   <androidx.recyclerview.widget.RecyclerView
+       android:id="@+id/rv_notes"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:layout_centerHorizontal="true"
+       android:layout_centerVertical="true"/>
 
-</LinearLayout>
+   <ProgressBar
+       android:id="@+id/progressBarLoading"
+       style="?android:attr/progressBarStyle"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_centerHorizontal="true"
+       android:layout_centerVertical="true"
+       android:visibility="gone" />
+
+   <ImageView
+       android:id="@+id/imageViewEmpty"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_centerHorizontal="true"
+       android:layout_centerVertical="true"
+       android:background="@drawable/geonotes_logo"
+       android:visibility="gone" />
+
+   <TextView
+       android:id="@+id/textViewEmpty"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_below="@+id/imageViewEmpty"
+       android:layout_centerHorizontal="true"
+       android:text="@string/NO_INFORMATION"
+       android:visibility="gone" />
+
+</RelativeLayout>

@@ -231,7 +231,7 @@ public class FootprintFragment extends Fragment implements OnMapReadyCallback {
                             markerOptions.position(latLng);
                             markerOptions.title(title.toString());
                             alert.dismiss();
-                            Toast.makeText(this.getActivity(), "Note added Successfully", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this.getContext(), "Note added Successfully", Toast.LENGTH_SHORT).show();
                             mMap.addMarker(new MarkerOptions().position(latLng));
                             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
                         })
