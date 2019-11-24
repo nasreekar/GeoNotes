@@ -76,6 +76,7 @@ public class NotesListFragment extends Fragment {
     }
 
     private void setUpRecyclerView() {
+        mProgressBarLoading.setVisibility(View.VISIBLE);
         userID = FirebaseAuth.getInstance().getCurrentUser().getEmail();
         Query query = notesRef.whereEqualTo("email", userID);
 
@@ -83,6 +84,7 @@ public class NotesListFragment extends Fragment {
                 .setQuery(query, Notes.class)
                 .build();
 
+        mProgressBarLoading.setVisibility(View.INVISIBLE);
         adapter = new NotesAdapter(options);
         rvNotes.setHasFixedSize(true);
         rvNotes.setLayoutManager(new LinearLayoutManager(getContext()));

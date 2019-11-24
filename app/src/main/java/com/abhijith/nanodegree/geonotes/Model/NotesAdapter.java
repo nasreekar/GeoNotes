@@ -51,7 +51,7 @@ public class NotesAdapter extends FirestoreRecyclerAdapter<Notes, NotesAdapter.N
             itemView.setOnClickListener(view -> {
                 int position = getAdapterPosition();
                 // send the click from adapter to activity/fragment
-                if(position != RecyclerView.NO_POSITION && listener !=null) {
+                if (position != RecyclerView.NO_POSITION && listener != null) {
                     listener.onItemClick(getSnapshots().getSnapshot(position), position);
                 }
             });
@@ -59,11 +59,11 @@ public class NotesAdapter extends FirestoreRecyclerAdapter<Notes, NotesAdapter.N
     }
 
     // send the click from adapter to activity/fragment
-    public  interface OnItemClickListener {
+    public interface OnItemClickListener {
         void onItemClick(DocumentSnapshot documentSnapshot, int position);
     }
 
-    public  void setOnItemClickListener (OnItemClickListener listener) {
+    public void setOnItemClickListener(OnItemClickListener listener) {
         this.listener = listener;
     }
 }
