@@ -1,26 +1,28 @@
 package com.abhijith.nanodegree.geonotes.View;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.abhijith.nanodegree.geonotes.Model.Notes;
 import com.abhijith.nanodegree.geonotes.Model.NotesAdapter;
 import com.abhijith.nanodegree.geonotes.R;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.ArrayList;
+import com.google.firebase.firestore.Query;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,53 +44,68 @@ public class NotesListFragment extends Fragment {
     @BindView(R.id.progressBarLoading)
     ProgressBar mProgressBarLoading;
 
-    private ArrayList<Notes> notesList = new ArrayList<>();
-    FirebaseFirestore firestoreDB;
+    private FirebaseFirestore firestoreDB = FirebaseFirestore.getInstance();
+    private CollectionReference notesRef = firestoreDB.collection("notes");
+    private NotesAdapter adapter;
     private String userID;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_notes_list, container, false);
 
         ButterKnife.bind(this, rootView);
 
-        firestoreDB = FirebaseFirestore.getInstance();
-        userID = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-
-        getNotes();
+        setUpRecyclerView();
 
         return rootView;
     }
 
-    private void getNotes() {
-        getMyDocumentFromCollection(userID);
+    @Override
+    public void onStart() {
+        super.onStart();
+        adapter.startListening();
+
     }
 
-    private void getMyDocumentFromCollection(String userID) {
-        firestoreDB.collection("notes")
-                .whereEqualTo("email", userID)
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        for (DocumentSnapshot doc : task.getResult()) {
-                            Notes note = doc.toObject(Notes.class);
-                            // note.setId(doc.getId());
-                            notesList.add(note);
-                        }
-                        initializeNotesList();
-
-                    } else {
-                        Log.d(TAG, "Error getting documents: ", task.getException());
-                    }
-                });
+    @Override
+    public void onStop() {
+        super.onStop();
+        adapter.stopListening();
     }
 
-    private void initializeNotesList() {
+    private void setUpRecyclerView() {
+        userID = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+        Query query = notesRef.whereEqualTo("email", userID);
+
+        FirestoreRecyclerOptions<Notes> options = new FirestoreRecyclerOptions.Builder<Notes>()
+                .setQuery(query, Notes.class)
+                .build();
+
+        adapter = new NotesAdapter(options);
         rvNotes.setHasFixedSize(true);
         rvNotes.setLayoutManager(new LinearLayoutManager(getContext()));
-        rvNotes.setAdapter(new NotesAdapter(getContext(), notesList));
+        rvNotes.setAdapter(adapter);
+
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
+                ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                adapter.deleteItem(viewHolder.getAdapterPosition());
+            }
+        }).attachToRecyclerView(rvNotes);
+
+        adapter.setOnItemClickListener((documentSnapshot, position) -> {
+            Notes note = documentSnapshot.toObject(Notes.class);
+            String id = documentSnapshot.getId();
+            String path = documentSnapshot.getReference().getPath();
+            Toast.makeText(getContext(), "Position: " + position + " ID: " + id, Toast.LENGTH_SHORT).show();
+        });
     }
 }
