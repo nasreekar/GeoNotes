@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import androidx.fragment.app.Fragment;
 
@@ -24,6 +25,15 @@ public class ProfileFragment extends Fragment {
     @BindView(R.id.btn_logout)
     Button logout;
 
+    @BindView(R.id.iv_stackoverflow)
+    ImageView stackoverflow;
+
+    @BindView(R.id.iv_github)
+    ImageView github;
+
+    @BindView(R.id.iv_linkedin)
+    ImageView linkedIn;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -33,6 +43,27 @@ public class ProfileFragment extends Fragment {
         ButterKnife.bind(this, rootView);
 
         logout.setOnClickListener(view -> logout());
+
+        stackoverflow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        github.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        linkedIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
 
         return rootView;
     }

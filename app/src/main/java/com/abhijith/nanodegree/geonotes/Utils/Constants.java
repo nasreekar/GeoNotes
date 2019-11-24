@@ -16,5 +16,8 @@ public class Constants {
 
     public static final int MARKER_DIMENSION = 80;
 
+    public static final String GITHUB = "https://github.com/nasreekar";
+    public static final String LINKEDIN = "https://www.linkedin.com/in/abhijithsreekar/";
+    public static final String STACKOVERFLOW = "https://stackoverflow.com/users/6169668/asn";
 
 }

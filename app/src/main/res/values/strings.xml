@@ -30,5 +30,10 @@
     <string name="delete">DELETE</string>
     <string name="ic_my_notes">My Notes</string>
     <string name="ic_all_notes">All Notes</string>
+    <string name="stackoverflow">Stackoverflow</string>
+    <string name="github">Github</string>
+    <string name="linkedin">LinkedIn</string>
+    <string name="abhijith_sreekar">Abhijith Sreekar</string>
+    <string name="developer_profile">Developer Profile</string>
 
 </resources>
