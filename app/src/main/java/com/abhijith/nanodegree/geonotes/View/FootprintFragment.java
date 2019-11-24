@@ -23,7 +23,9 @@ import androidx.fragment.app.Fragment;
 
 import com.abhijith.nanodegree.geonotes.Model.Notes;
 import com.abhijith.nanodegree.geonotes.R;
+import com.abhijith.nanodegree.geonotes.Utils.GeoNotesUtils;
 import com.abhijith.nanodegree.geonotes.Utils.GooglePlayServicesHelper;
+import com.abhijith.nanodegree.geonotes.Utils.MarkerClusterRenderer;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -41,7 +43,9 @@ import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.maps.android.clustering.ClusterManager;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -54,17 +58,23 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.abhijith.nanodegree.geonotes.Utils.Constants.DEFAULT_ZOOM;
+
 public class FootprintFragment extends Fragment implements OnMapReadyCallback {
 
     private static final String TAG = FootprintFragment.class.getSimpleName();
-
-    private static final float DEFAULT_ZOOM = 15f;
 
     @BindView(R.id.tv_search)
     TextView mSearchText;
 
     @BindView(R.id.ic_gps)
     ImageView mGps;
+
+    @BindView(R.id.ic_my_notes)
+    ImageView myNotes;
+
+    @BindView(R.id.ic_all_notes)
+    ImageView allNotes;
 
     private String finalLocation;
 
@@ -82,7 +92,11 @@ public class FootprintFragment extends Fragment implements OnMapReadyCallback {
     private Geocoder geocoder;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private CollectionReference notesRef = db.collection("notes");
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+
+    private List<Notes> allNotesFromDb = new ArrayList<>();
+    private List<Notes> myListitems = new ArrayList<>();
 
     public FootprintFragment() {
     }
@@ -152,12 +166,6 @@ public class FootprintFragment extends Fragment implements OnMapReadyCallback {
 
             init();
         }
-
-        googleMap.setOnInfoWindowClickListener(marker -> {
-            Log.d(TAG, "setOnInfoWindowClickListener: Marker window clicked");
-            Toast.makeText(this.getContext(), marker.getTitle(), Toast.LENGTH_SHORT).show();
-        });
-
     }
 
     private void init() {
@@ -183,12 +191,62 @@ public class FootprintFragment extends Fragment implements OnMapReadyCallback {
             getDeviceLocation();
         });
 
+        getMyNotes();
+
+        myNotes.setOnClickListener(view -> {
+            Log.d(TAG, "onClick: clicked myNotes icon");
+            getMyNotes();
+        });
+
+        allNotes.setOnClickListener(view -> {
+            Log.d(TAG, "onClick: clicked all notes icon");
+            getAllNotes();
+        });
+
         mMap.setOnMapClickListener(this::displayNoteDialog);
 
         mMap.setOnMarkerClickListener(marker -> {
             displayMarkerWithNotes(marker);
             return true;
         });
+    }
+
+    private void getMyNotes() {
+        myListitems.clear();
+        notesRef.whereEqualTo("email", mAuth.getCurrentUser().getEmail()).get()
+                .addOnSuccessListener(documentSnapshots -> {
+                    if (documentSnapshots.isEmpty()) {
+                        Log.d(TAG, "onSuccess: LIST EMPTY");
+                        return;
+                    } else {
+                        List<Notes> types = documentSnapshots.toObjects(Notes.class);
+                        myListitems.addAll(types);
+                        showClusterMapView(myListitems, mMap);
+                    }
+
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "Error receiving all documents to show on map");
+                });
+    }
+
+    private void getAllNotes() {
+        allNotesFromDb.clear();
+        notesRef.get()
+                .addOnSuccessListener(documentSnapshots -> {
+                    if (documentSnapshots.isEmpty()) {
+                        Log.d(TAG, "onSuccess: LIST EMPTY");
+                        return;
+                    } else {
+                        List<Notes> types = documentSnapshots.toObjects(Notes.class);
+                        allNotesFromDb.addAll(types);
+                        showClusterMapView(allNotesFromDb, mMap);
+                    }
+
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "Error receiving all documents to show on map");
+                });
     }
 
 
@@ -222,18 +280,18 @@ public class FootprintFragment extends Fragment implements OnMapReadyCallback {
                 Toast.makeText(this.getActivity(), "Title cannot be empty", Toast.LENGTH_SHORT).show();
             } else {
                 Notes notes = new Notes(heading, desc, email, currentDate, location, String.valueOf(latLng.latitude), String.valueOf(latLng.longitude));
-
                 db.collection("notes")
                         .add(notes)
                         .addOnSuccessListener(documentReference -> {
                             Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
-                            MarkerOptions markerOptions = new MarkerOptions();
-                            markerOptions.position(latLng);
-                            markerOptions.title(title.toString());
+                            MarkerOptions markerOptions = new MarkerOptions()
+                                    .position(latLng)
+                                    .title(title.toString())
+                                    .icon(GeoNotesUtils.bitmapDescriptorFromVector(getContext(), R.drawable.ic_marker_cluster));
                             alert.dismiss();
                             Toast.makeText(this.getContext(), "Note added Successfully", Toast.LENGTH_SHORT).show();
-                            mMap.addMarker(new MarkerOptions().position(latLng));
-                            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                            mMap.addMarker(markerOptions);
+                            getCameraPositionWithBearing(markerOptions.getPosition());
                         })
                         .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
 
@@ -383,11 +441,38 @@ public class FootprintFragment extends Fragment implements OnMapReadyCallback {
 
         //Zoom in and animate the camera.
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(getCameraPositionWithBearing(latLng)));
-
     }
 
     @NonNull
     private CameraPosition getCameraPositionWithBearing(LatLng latLng) {
         return new CameraPosition.Builder().target(latLng).zoom(DEFAULT_ZOOM).build();
+    }
+
+    private void showClusterMapView(List<Notes> noteList, GoogleMap mMap) {
+
+        // moveCamera(new LatLng(Constants.DEFAULT_LATITUDE, Constants.DEFAULT_LONGITUDE), Constants.DEFAULT_TITLE);
+
+        ClusterManager<Notes> mClusterManager = new ClusterManager<>(getContext(), mMap);
+        mClusterManager.setRenderer(new MarkerClusterRenderer(this.getContext(), mMap, mClusterManager));
+        mMap.setOnCameraIdleListener(mClusterManager);
+        mMap.setOnMarkerClickListener(mClusterManager);
+        mMap.setOnInfoWindowClickListener(marker -> {
+            AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
+            alertDialog.setTitle("More Details of " + "\"" + marker.getTitle() + "\"");
+            alertDialog.setMessage(marker.getSnippet());
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Got It!",
+                    (dialog, which) -> dialog.dismiss());
+            alertDialog.show();
+        });
+        addNoteItemsWhichHasLatLng(mClusterManager, noteList);
+        mClusterManager.cluster();
+    }
+
+    private void addNoteItemsWhichHasLatLng(ClusterManager<Notes> mClusterManager, List<Notes> noteList) {
+        for (Notes note : noteList) {
+            if (note.getLocation() != null) {
+                mClusterManager.addItem(note);
+            }
+        }
     }
 }
