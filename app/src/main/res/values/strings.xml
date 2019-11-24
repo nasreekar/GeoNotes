@@ -35,5 +35,8 @@
     <string name="linkedin">LinkedIn</string>
     <string name="abhijith_sreekar">Abhijith Sreekar</string>
     <string name="developer_profile">Developer Profile</string>
+    <string name="software_developer">Software Developer(Android)</string>
+    <string name="singapore">Singapore</string>
+    <string name="developer_description">Android Application Developer with great passion for developing applications which makes users life easy.</string>
 
 </resources>
