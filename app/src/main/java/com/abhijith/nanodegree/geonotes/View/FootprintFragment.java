@@ -117,6 +117,22 @@ public class FootprintFragment extends Fragment implements OnMapReadyCallback {
         return rootView;
     }
 
+    private void getLocationPermissions() {
+        Log.d(TAG, "getLocationPermissions: getting location permissions");
+        String[] permissions = {FINE_LOCATION, COARSE_LOCATION};
+
+        if (ActivityCompat.checkSelfPermission(getActivity().getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission
+                (getActivity().getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(getActivity(), permissions, LOCATIONS_PERMISSIONS_REQUEST);
+
+        } else {
+            mLocationPermissionsGranted = true;
+            initMap();
+        }
+    }
+
     private void initMap() {
         Log.d(TAG, "initMap: initializing map fragment");
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.frg_footprint);
@@ -132,7 +148,7 @@ public class FootprintFragment extends Fragment implements OnMapReadyCallback {
         // Specify the types of place data to return.
         if (autocompleteFragment != null) {
             autocompleteFragment.setHint("Search Location");
-            autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME));
+            autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG));
         }
 
         if (mapFragment != null) {
@@ -156,7 +172,7 @@ public class FootprintFragment extends Fragment implements OnMapReadyCallback {
                 return;
             }
             mMap.setMyLocationEnabled(true);
-            mMap.getUiSettings().setMyLocationButtonEnabled(false); // to get rid of the location button
+            mMap.getUiSettings().setMyLocationButtonEnabled(false); // to get rid of the default location button
 
             init();
         }
@@ -170,7 +186,7 @@ public class FootprintFragment extends Fragment implements OnMapReadyCallback {
             public void onPlaceSelected(Place place) {
                 Log.i(TAG, "Place: " + place.getName() + ", " + place.getId());
                 mSearchText.setText(place.getName());
-                geoLocateByPlaceName();
+                geoLocateByPlaceName(place.getLatLng());
             }
 
             @Override
@@ -193,6 +209,36 @@ public class FootprintFragment extends Fragment implements OnMapReadyCallback {
             displayMarkerWithNotes(marker);
             return true;
         });
+    }
+
+    private void geoLocateByPlaceName(LatLng latLng) {
+        //mMap.animateCamera(CameraUpdateFactory.newCameraPosition(getCameraPositionWithBearing(latLng)));
+        displayNoteDialog(latLng);
+    }
+
+    // Getting the base location of the user
+    private void getDeviceLocation() {
+        Log.d(TAG, "getDeviceLocation: getting device's current location");
+        FusedLocationProviderClient mfusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this.getActivity());
+        try {
+            if (mLocationPermissionsGranted) {
+                Task location = mfusedLocationProviderClient.getLastLocation();
+                location.addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        Log.d(TAG, "onComplete: found location!");
+                        currentLocation = (Location) task.getResult();
+                        moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
+                                "My Location");
+                    } else {
+                        Log.d(TAG, "onComplete: current location is null");
+                        Toast.makeText(getActivity(), getString(R.string.current_location_not_found), Toast.LENGTH_SHORT).show();
+                        moveCamera(new LatLng(Constants.DEFAULT_LATITUDE, Constants.DEFAULT_LONGITUDE), "My Location");
+                    }
+                });
+            }
+        } catch (SecurityException e) {
+            Log.e(TAG, "getDeviceLocation: SecurityException");
+        }
     }
 
     private void getAllNotes() {
@@ -246,14 +292,9 @@ public class FootprintFragment extends Fragment implements OnMapReadyCallback {
                         .add(notes)
                         .addOnSuccessListener(documentReference -> {
                             Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
-                            MarkerOptions markerOptions = new MarkerOptions()
-                                    .position(latLng)
-                                    .title(title.toString())
-                                    .icon(GeoNotesUtils.bitmapDescriptorFromVector(getContext(), R.drawable.ic_marker_cluster));
-                            alert.dismiss();
                             Toast.makeText(this.getContext(), "Note added Successfully", Toast.LENGTH_SHORT).show();
-                            mMap.addMarker(markerOptions);
-                            getCameraPositionWithBearing(markerOptions.getPosition());
+                            alert.dismiss();
+                            moveCamera(new LatLng(latLng.latitude, latLng.longitude), title.toString());
                         })
                         .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
 
@@ -267,54 +308,6 @@ public class FootprintFragment extends Fragment implements OnMapReadyCallback {
 
     private void displayMarkerWithNotes(Marker marker) {
         Toast.makeText(this.getContext(), marker.getTitle(), Toast.LENGTH_SHORT).show();
-    }
-
-    // Getting the base location of the user
-    private void getDeviceLocation() {
-        Log.d(TAG, "getDeviceLocation: getting device's current location");
-        FusedLocationProviderClient mfusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this.getActivity());
-        try {
-            if (mLocationPermissionsGranted) {
-                Task location = mfusedLocationProviderClient.getLastLocation();
-                location.addOnCompleteListener(task -> {
-                    if (task.isSuccessful() && task.getResult() != null) {
-                        Log.d(TAG, "onComplete: found location!");
-                        currentLocation = (Location) task.getResult();
-                        moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
-                                "My Location");
-                    } else {
-                        Log.d(TAG, "onComplete: current location is null");
-                        Toast.makeText(getActivity(), getString(R.string.current_location_not_found), Toast.LENGTH_SHORT).show();
-                        moveCamera(new LatLng(Constants.DEFAULT_LATITUDE, Constants.DEFAULT_LONGITUDE),"My Location");
-                    }
-                });
-            }
-        } catch (SecurityException e) {
-            Log.e(TAG, "getDeviceLocation: SecurityException");
-        }
-    }
-
-    private void geoLocateByPlaceName() {
-        Log.d(TAG, "geoLocateByPlaceName: geolocating");
-        String searchString = mSearchText.getText().toString();
-        Log.d(TAG, "geoLocateByPlaceName: searchString: " + searchString);
-        geocoder = new Geocoder(this.getActivity());
-        List<Address> list = new ArrayList<>();
-        try {
-            list = geocoder.getFromLocationName(searchString, 1);
-        } catch (IOException e) {
-            Log.d(TAG, "geoLocateByPlaceName: IOException: " + e.getMessage());
-            Toast.makeText(getActivity(), getString(R.string.error_retrieving_location_coordinates), Toast.LENGTH_SHORT).show();
-        }
-
-        if (list.size() > 0) {
-            Address address = list.get(0);
-            Log.d(TAG, "geoLocateByPlaceName: found a location: " + address.toString());
-            moveCamera(new LatLng(address.getLatitude(), address.getLongitude()), address.getAddressLine(0));
-        } else {
-            Log.d(TAG, "geoLocateByPlaceName: didnt find a location ");
-            Toast.makeText(this.getActivity(), "Sorry! Something went wrong. Please try again later", Toast.LENGTH_SHORT).show();
-        }
     }
 
     private String getLocationDetails(LatLng latLng) {
@@ -354,23 +347,6 @@ public class FootprintFragment extends Fragment implements OnMapReadyCallback {
         return finalLocation;
     }
 
-    private void getLocationPermissions() {
-        Log.d(TAG, "getLocationPermissions: getting location permissions");
-        String[] permissions = {FINE_LOCATION, COARSE_LOCATION};
-        if (ActivityCompat.checkSelfPermission(getActivity().getApplicationContext(),
-                FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.checkSelfPermission(getActivity().getApplicationContext(),
-                    COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                mLocationPermissionsGranted = true;
-                initMap();
-            } else {
-                ActivityCompat.requestPermissions(getActivity(), permissions, LOCATIONS_PERMISSIONS_REQUEST);
-            }
-        } else {
-            ActivityCompat.requestPermissions(getActivity(), permissions, LOCATIONS_PERMISSIONS_REQUEST);
-        }
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         Log.d(TAG, "onRequestPermissionResult: called");
@@ -397,7 +373,8 @@ public class FootprintFragment extends Fragment implements OnMapReadyCallback {
         if (!title.equals("My Location")) {
             MarkerOptions options = new MarkerOptions()
                     .position(latLng)
-                    .title(title);
+                    .title(title)
+                    .icon(GeoNotesUtils.bitmapDescriptorFromVector(getContext(), R.drawable.ic_marker_cluster));
             mMap.addMarker(options);
         }
 
