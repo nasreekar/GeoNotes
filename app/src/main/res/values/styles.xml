@@ -25,14 +25,14 @@
 
     <style name="DeveloperProfileName_Style">
         <item name="android:fontFamily">@font/itcavantgardestd_demi</item>
-        <item name="android:textSize">@dimen/dp_32</item>
+        <item name="android:textSize">@dimen/dp_24</item>
         <item name="android:textColor">@android:color/black</item>
     </style>
 
     <style name="Logout_Style">
         <item name="android:fontFamily">@font/itcavantgardestd_demi</item>
         <item name="android:textSize">@dimen/dp_16</item>
-        <item name="android:background">@color/colorAccent</item>
+        <item name="android:background">@drawable/button_rounded_corner</item>
         <item name="android:textColor">@android:color/white</item>
     </style>
 
@@ -42,6 +42,29 @@
         <item name="android:alpha">0.5</item>
         <item name="android:textColor">@android:color/black</item>
         <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="NotesListTitleStyle">
+        <item name="android:fontFamily">@font/itcavantgardestd_bk</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+    </style>
+
+    <style name="NotesListDescriptionStyle">
+        <item name="android:fontFamily">@font/itcavantgardestd_bk</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
+    </style>
+
+    <style name="BottomNavigationView" parent="@style/TextAppearance.AppCompat.Caption">
+        <item name="android:textSize">13sp</item>
+        <item name="android:fontFamily">@font/itcavantgardestd_bk</item>
+    </style>
+
+    <style name="BottomNavigationView.Active" parent="@style/TextAppearance.AppCompat.Caption">
+        <item name="android:textSize">15sp</item>
+        <item name="android:fontFamily">@font/itcavantgardestd_bk</item>
     </style>
 
 </resources>

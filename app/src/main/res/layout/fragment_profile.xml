@@ -8,7 +8,7 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="201dp"
+        android:layout_height="280dp"
         android:background="@color/colorAccent" />
 
     <LinearLayout
@@ -17,6 +17,16 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:orientation="vertical">
+
+        <TextView
+            style="@style/DeveloperProfileName_Style"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_32"
+            android:background="@drawable/textview_rounded_corner"
+            android:gravity="center"
+            android:padding="@dimen/dp_8"
+            android:text="@string/developer_profile" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -56,9 +66,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
                             android:layout_marginTop="60dp"
-                            android:text="@string/abhijith_sreekar"
-                            android:textSize="25sp"
-                            android:textStyle="bold" />
+                            android:text="@string/abhijith_sreekar" />
 
                         <TextView
                             style="@style/DeveloperProfileDescription_Style"

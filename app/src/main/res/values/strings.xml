@@ -25,7 +25,7 @@
     <string name="invalid_lat_long_used">Invalid location details provided</string>
     <string name="no_address_found">No Address Found</string>
     <string name="address_found">Address Found</string>
-    <string name="list_item_map_icon">Map Icon</string>
+    <string name="list_item_map_view">Map View</string>
     <string name="NO_INFORMATION">Looks like there are no saved notes. Add one to see here :)</string>
     <string name="delete">DELETE</string>
     <string name="ic_my_notes">My Notes</string>

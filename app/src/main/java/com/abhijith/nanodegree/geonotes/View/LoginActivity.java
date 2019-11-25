@@ -3,6 +3,7 @@ package com.abhijith.nanodegree.geonotes.View;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -81,12 +82,30 @@ public class LoginActivity extends AppCompatActivity {
 
         signIn.setOnClickListener(view -> signIn());
 
-        register.setOnClickListener(view -> {
-            startActivity(new Intent(this, RegisterActivity.class));
-        });
+        register.setOnClickListener(view -> startActivity(new Intent(this, RegisterActivity.class)));
 
         loginBtn.setOnClickListener(view -> loginUserAccount());
 
+        forgotPassword.setOnClickListener(view -> passwordReset());
+
+    }
+
+    private void passwordReset() {
+        String emailaddress = etEmail.getText().toString().trim();
+
+        if (TextUtils.isEmpty(emailaddress)) {
+            Toast.makeText(LoginActivity.this, "Enter your email to reset password", Toast.LENGTH_SHORT).show();
+        } else {
+            firebaseAuth.sendPasswordResetEmail(emailaddress)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "Email sent.");
+                            Toast.makeText(LoginActivity.this, "Check Your Email", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
     }
 
     private void loginUserAccount() {
