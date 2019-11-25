@@ -9,7 +9,7 @@
     <string name="installGooglePlay_error">Please Install google play services to use this application</string>
     <string name="searchbar_hint">Enter address, City or Zip Code</string>
     <string name="gps_content">GPS</string>
-    <string name="current_location_not_found">Unable to get current location</string>
+    <string name="current_location_not_found">Unable to get current location. Using Defaults</string>
     <string name="error_retrieving_location_coordinates">Error Getting coordinates of the location. Try again later.</string>
     <string name="app_logo">App Logo</string>
     <string name="logout">Logout</string>

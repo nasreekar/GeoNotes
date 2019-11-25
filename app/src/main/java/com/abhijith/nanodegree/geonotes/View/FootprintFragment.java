@@ -23,6 +23,7 @@ import androidx.fragment.app.Fragment;
 
 import com.abhijith.nanodegree.geonotes.Model.Notes;
 import com.abhijith.nanodegree.geonotes.R;
+import com.abhijith.nanodegree.geonotes.Utils.Constants;
 import com.abhijith.nanodegree.geonotes.Utils.GeoNotesUtils;
 import com.abhijith.nanodegree.geonotes.Utils.GooglePlayServicesHelper;
 import com.abhijith.nanodegree.geonotes.Utils.MarkerClusterRenderer;
@@ -276,15 +277,15 @@ public class FootprintFragment extends Fragment implements OnMapReadyCallback {
             if (mLocationPermissionsGranted) {
                 Task location = mfusedLocationProviderClient.getLastLocation();
                 location.addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
+                    if (task.isSuccessful() && task.getResult() != null) {
                         Log.d(TAG, "onComplete: found location!");
                         currentLocation = (Location) task.getResult();
                         moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
                                 "My Location");
-
                     } else {
                         Log.d(TAG, "onComplete: current location is null");
                         Toast.makeText(getActivity(), getString(R.string.current_location_not_found), Toast.LENGTH_SHORT).show();
+                        moveCamera(new LatLng(Constants.DEFAULT_LATITUDE, Constants.DEFAULT_LONGITUDE),"My Location");
                     }
                 });
             }
