@@ -32,6 +32,11 @@ Few of the things that can be either modified or added are:
 ## Bugs
 There might be some bugs that would have crept in and went unnoticed while developing, but my highest priority is to implement the functionality as per requirements and these bugs would be fixed in coming updated versions/releases.
 
+## Testing
+For testing purposes, you can run use the following credentials.
+email: abc@gmail.com
+password: password
+
 ## Hiding API Keys
 The problem I faced while setting up the repository is I entered the API key in a tracked file and pushed it directly to Github. Checking this into source control can expose your key to the public and And I started receiving emails from GitGuardian that I'm exposing the API keys. 
 
