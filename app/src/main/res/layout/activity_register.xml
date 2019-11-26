@@ -52,7 +52,7 @@
     <Button
         android:id="@+id/btn_alreadyMember"
         style="@style/Logout_Style"
-        android:layout_width="200dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dp_16"
         android:layout_marginBottom="10dp"

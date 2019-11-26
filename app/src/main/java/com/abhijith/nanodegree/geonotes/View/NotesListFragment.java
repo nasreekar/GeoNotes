@@ -7,9 +7,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.abhijith.nanodegree.geonotes.Model.Notes;
 import com.abhijith.nanodegree.geonotes.Model.NotesAdapter;
 import com.abhijith.nanodegree.geonotes.R;
+import com.abhijith.nanodegree.geonotes.Utils.GeoNotesUtils;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
@@ -107,7 +108,9 @@ public class NotesListFragment extends Fragment {
             Notes note = documentSnapshot.toObject(Notes.class);
             String id = documentSnapshot.getId();
             String path = documentSnapshot.getReference().getPath();
-            Toast.makeText(getContext(), "Position: " + position + " ID: " + id, Toast.LENGTH_SHORT).show();
+            if (note != null) {
+                GeoNotesUtils.showMarkerInfo((AppCompatActivity) getContext(), note.getTitle(), note.getSnippet());
+            }
         });
     }
 }

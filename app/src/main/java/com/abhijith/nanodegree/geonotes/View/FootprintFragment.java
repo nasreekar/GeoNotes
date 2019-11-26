@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
@@ -60,6 +61,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.abhijith.nanodegree.geonotes.Utils.Constants.DEFAULT_ZOOM;
+import static com.abhijith.nanodegree.geonotes.Utils.GeoNotesUtils.showMarkerInfo;
 
 public class FootprintFragment extends Fragment implements OnMapReadyCallback {
 
@@ -301,7 +303,7 @@ public class FootprintFragment extends Fragment implements OnMapReadyCallback {
             }
         });
 
-        dialog.setNegativeButton("CANCEL", (alert, which) -> alert.dismiss());
+        dialog.setNeutralButton("CANCEL", (alert, which) -> alert.dismiss());
 
         dialog.show();
     }
@@ -396,12 +398,10 @@ public class FootprintFragment extends Fragment implements OnMapReadyCallback {
         mMap.setOnCameraIdleListener(mClusterManager);
         mMap.setOnMarkerClickListener(mClusterManager);
         mMap.setOnInfoWindowClickListener(marker -> {
-            AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
-            alertDialog.setTitle("More Details of " + "\"" + marker.getTitle() + "\"");
-            alertDialog.setMessage(marker.getSnippet());
-            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Got It!",
-                    (dialog, which) -> dialog.dismiss());
-            alertDialog.show();
+            String title = "More Details of " + "\"" + marker.getTitle() + "\"";
+            String description = marker.getSnippet();
+            showMarkerInfo((AppCompatActivity) getContext(), title, description);
+
         });
         addNoteItemsWhichHasLatLng(mClusterManager, noteList);
         mClusterManager.cluster();
