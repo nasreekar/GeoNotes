@@ -34,8 +34,23 @@ There might be some bugs that would have crept in and went unnoticed while devel
 
 ## Testing
 For testing purposes, you can run use the following credentials.
+
 email: abc@gmail.com
+
 password: password
+
+## Screens
+Map screen (FootprintFragment) - Displays all the pointers of all users (color coded. Red for own notes, Blue for other users markers)
+
+Notes List (NotesListFragment) - Displays only Notes of the logged in user (To read the notes of other users, navigate to map screen and click on any `blue` marker which will show a window and on clicking on that a bottom dialog appears with more details.) Clicking on any of the card views in this screen will open a bottom dialog sheet with more details. Clicking on the map in card view will open google maps.
+
+| ![Home Screen - GeoNotes](https://i.postimg.cc/MHSMSd7G/Screenshot-2019-11-26-at-5-59-23-PM.png) | ![HomeScreen](https://i.postimg.cc/PxZp9B8c/Screenshot-2019-11-26-at-5-57-19-PM.png)| ![Marker Window](https://i.postimg.cc/gJvjN8Cb/Screenshot-2019-11-26-at-5-57-31-PM.png) | ![Details Screen Extended](https://i.postimg.cc/fbSJS65L/Screenshot-2019-11-26-at-5-57-42-PM.png) |
+|:---:|:---:|:---:|:---:|
+| ![NotesList](https://i.postimg.cc/zGcyBJC6/Screenshot-2019-11-26-at-5-57-58-PM.png)| ![Share](https://i.postimg.cc/YqtGDD2n/Screenshot-2019-11-26-at-5-58-17-PM.png) | ![Profile](https://i.postimg.cc/3RMWXnbZ/Screenshot-2019-11-26-at-5-59-00-PM.png) | ![Favorites](https://i.postimg.cc/wMQtTL2Q/Screenshot-2019-11-26-at-5-58-31-PM.png)
+
+## App Functionality
+
+![video](https://media.giphy.com/media/QtvDhnGCIuMs2reCYx/giphy.gif)
 
 ## Hiding API Keys
 The problem I faced while setting up the repository is I entered the API key in a tracked file and pushed it directly to Github. Checking this into source control can expose your key to the public and And I started receiving emails from GitGuardian that I'm exposing the API keys. 
