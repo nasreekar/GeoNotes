@@ -78,7 +78,7 @@ public class NotesListFragment extends Fragment {
     private void setUpRecyclerView() {
         mProgressBarLoading.setVisibility(View.VISIBLE);
         userID = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-        Query query = notesRef.whereEqualTo("email", userID);
+        Query query = notesRef.whereEqualTo("email", userID).orderBy("date", Query.Direction.DESCENDING);
 
         FirestoreRecyclerOptions<Notes> options = new FirestoreRecyclerOptions.Builder<Notes>()
                 .setQuery(query, Notes.class)

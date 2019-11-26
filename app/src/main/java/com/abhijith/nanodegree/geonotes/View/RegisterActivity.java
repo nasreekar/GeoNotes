@@ -1,9 +1,11 @@
 package com.abhijith.nanodegree.geonotes.View;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -58,6 +60,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void registerNewUser() {
+        hideKeyboard();
         progressBar.setVisibility(View.VISIBLE);
 
         String email, password;
@@ -92,5 +95,12 @@ public class RegisterActivity extends AppCompatActivity {
         Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    public void hideKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        }
     }
 }

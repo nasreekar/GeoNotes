@@ -1,34 +1,42 @@
 {
   "project_info": {
-    "project_number": "374542513018",
-    "firebase_url": "https://geonotes-250509.firebaseio.com",
-    "project_id": "geonotes-250509",
-    "storage_bucket": "geonotes-250509.appspot.com"
+    "project_number": "1052110776923",
+    "firebase_url": "https://geonotes-udacity.firebaseio.com",
+    "project_id": "geonotes-udacity",
+    "storage_bucket": "geonotes-udacity.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:374542513018:android:910b6e3ea42361d2",
+        "mobilesdk_app_id": "1:1052110776923:android:1b98c5d1ed088c11d3ed7e",
         "android_client_info": {
           "package_name": "com.abhijith.nanodegree.geonotes"
         }
       },
       "oauth_client": [
         {
-          "client_id": "374542513018-2pi69atn8uf1c5eds69ak7bdoe5tcpf8.apps.googleusercontent.com",
+          "client_id": "1052110776923-cpbsm41qakr6skajd0pqo4iq25lrme3p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.abhijith.nanodegree.geonotes",
+            "certificate_hash": "46bb9691627ed542d219c0fa287bd9d23aef2378"
+          }
+        },
+        {
+          "client_id": "1052110776923-elp2r5pb4f884it3euo9g57aa5es729t.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDTKdVEydIwhCOfjrgh9zuHJ3ZclQ8uVEo"
+          "current_key": "AIzaSyCYbip4Aesn5rKK1mfAj5f3iGjylPbNoXI"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "374542513018-2pi69atn8uf1c5eds69ak7bdoe5tcpf8.apps.googleusercontent.com",
+              "client_id": "1052110776923-elp2r5pb4f884it3euo9g57aa5es729t.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
