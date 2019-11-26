@@ -1,6 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        release {
+            storeFile file('../keystore')
+            storePassword 'geonotes123'
+            keyAlias 'GeoNotes'
+            keyPassword 'geonotes123'
+        }
+    }
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
     defaultConfig {
@@ -13,8 +21,8 @@ android {
         multiDexEnabled true
 
         // Please ensure you have a valid API KEY for maps
-        // A valid key will need to be entered
-        // to access the key in XML files (layouts and other resources), then add it as a resValue or to access it from Java, add it as buildConfigField
+        // A valid key will need to be entered.
+        // To access the key in XML files (layouts and other resources), then add it as a resValue and to access it from Java, add it as buildConfigField
         resValue 'string', "API_KEY", GeoNotes_ApiKey
         resValue 'string', "WEB_CLIENT_ID", Geonotes_WebClientId
         resValue 'string', "WEB_CLIENT_SECRET", Geonotes_WebClientSecret
@@ -23,6 +31,10 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+        debug {
+            signingConfig signingConfigs.debug
         }
     }
 
@@ -56,7 +68,8 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:17.0.0'// locations
     implementation 'com.google.android.gms:play-services-places:17.0.0' // places
     implementation 'com.google.android.libraries.places:places:2.1.0'
-    implementation 'com.google.maps.android:android-maps-utils:0.5' // maps utilities like clusters, custom markers
+    implementation 'com.google.maps.android:android-maps-utils:0.5'
+    // maps utilities like clusters, custom markers
 
 
     // Firebase
