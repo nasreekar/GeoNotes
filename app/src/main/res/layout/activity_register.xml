@@ -44,7 +44,7 @@
         android:id="@+id/btn_signUp"
         style="@style/Logout_Style"
         android:layout_width="100dp"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
         android:text="@string/sign_up" />
 
