@@ -54,5 +54,8 @@
     <string name="message_register_password_entry">Please enter password!</string>
     <string name="message_register_success">Registration successful!</string>
     <string name="error_registration_fail">Registration failed! Please try again later</string>
+    <string name="dialog_add_note_title">Add Notes</string>
+    <string name="btn_submit">SUBMIT</string>
+    <string name="btn_cancel">CANCEL</string>
 
 </resources>

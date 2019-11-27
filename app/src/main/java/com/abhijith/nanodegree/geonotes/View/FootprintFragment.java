@@ -267,7 +267,7 @@ public class FootprintFragment extends Fragment implements OnMapReadyCallback {
         dialog.setView(dialogView);
         dialog.setCancelable(true);
         dialog.setIcon(R.drawable.geonotes_logo_round);
-        dialog.setTitle("Add Notes");
+        dialog.setTitle(getString(R.string.dialog_add_note_title));
 
         EditText title = dialogView.findViewById(R.id.et_title);
         EditText description = dialogView.findViewById(R.id.et_description);
@@ -281,7 +281,7 @@ public class FootprintFragment extends Fragment implements OnMapReadyCallback {
         formLocation.setText(location);
         String email = mAuth.getCurrentUser().getEmail();
 
-        dialog.setPositiveButton("SUBMIT", (alert, which) -> {
+        dialog.setPositiveButton(getString(R.string.btn_submit), (alert, which) -> {
 
             String heading = title.getText().toString().trim(); //title
             String desc = description.getText().toString().trim(); //description
@@ -303,7 +303,7 @@ public class FootprintFragment extends Fragment implements OnMapReadyCallback {
             }
         });
 
-        dialog.setNeutralButton("CANCEL", (alert, which) -> alert.dismiss());
+        dialog.setNeutralButton(getString(R.string.btn_cancel), (alert, which) -> alert.dismiss());
 
         dialog.show();
     }
