@@ -9,6 +9,8 @@ List the main features of your app. For example:
 2. Display list of notes
 3. Location Based
 4. Google Maps Clustering
+5. Swipe to delete (both directions) on Notes List
+6. Long press on note item to add it on home screen App widget
 
 ## Technology Stack Used
 1. Android (Java)
@@ -28,6 +30,7 @@ Few of the things that can be either modified or added are:
 1. Edit Note functionality
 2. Color coding of notes
 3. Better Architecture pattern (MVP/MVVM, SOLID etc)
+4. Update App widget to show a list of all notes added (only title) and clicking on any item to open details of the note
 
 ## Bugs
 There might be some bugs that would have crept in and went unnoticed while developing, but my highest priority is to implement the functionality as per requirements and these bugs would be fixed in coming updated versions/releases.
