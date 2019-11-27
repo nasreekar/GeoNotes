@@ -1,6 +1,5 @@
 package com.abhijith.nanodegree.geonotes.View;
 
-import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -25,7 +24,6 @@ import com.abhijith.nanodegree.geonotes.Model.NotesAdapter;
 import com.abhijith.nanodegree.geonotes.R;
 import com.abhijith.nanodegree.geonotes.Utils.Constants;
 import com.abhijith.nanodegree.geonotes.Utils.GeoNotesUtils;
-import com.abhijith.nanodegree.geonotes.Widget.GeoNotesWidget;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
@@ -33,7 +31,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.gson.Gson;
 import com.shreyaspatil.MaterialDialog.BottomSheetMaterialDialog;
-import com.shreyaspatil.MaterialDialog.interfaces.DialogInterface;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -132,7 +129,7 @@ public class NotesListFragment extends Fragment {
 
         adapter.setOnLongPressListener((documentSnapshot, position) -> {
             Notes note = documentSnapshot.toObject(Notes.class);
-            if(note!=null) {
+            if (note != null) {
                 new BottomSheetMaterialDialog.Builder((AppCompatActivity) getContext())
                         .setTitle(getString(R.string.favorite_note))
                         .setMessage(getString(R.string.add_to_widget))

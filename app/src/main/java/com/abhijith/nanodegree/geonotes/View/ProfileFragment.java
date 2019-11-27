@@ -8,11 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
 import com.abhijith.nanodegree.geonotes.R;
 import com.abhijith.nanodegree.geonotes.Utils.Constants;
+import com.abhijith.nanodegree.geonotes.Utils.InternetCheck;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -46,23 +48,35 @@ public class ProfileFragment extends Fragment {
 
         logout.setOnClickListener(view -> logout());
 
-        stackoverflow.setOnClickListener(view -> {
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse(Constants.STACKOVERFLOW));
-            startActivity(intent);
-        });
+        stackoverflow.setOnClickListener(view -> new InternetCheck(internet -> {
+            if (internet) {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(Constants.STACKOVERFLOW));
+                startActivity(intent);
+            } else {
+                Toast.makeText(getContext(), "Check your internet connection", Toast.LENGTH_SHORT).show();
+            }
+        }));
 
-        github.setOnClickListener(view -> {
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse(Constants.GITHUB));
-            startActivity(intent);
-        });
+        github.setOnClickListener(view -> new InternetCheck(internet -> {
+            if (internet) {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(Constants.GITHUB));
+                startActivity(intent);
+            } else {
+                Toast.makeText(getContext(), "Check your internet connection", Toast.LENGTH_SHORT).show();
+            }
+        }));
 
-        linkedIn.setOnClickListener(view -> {
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse(Constants.LINKEDIN));
-            startActivity(intent);
-        });
+        linkedIn.setOnClickListener(view -> new InternetCheck(internet -> {
+            if (internet) {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(Constants.LINKEDIN));
+                startActivity(intent);
+            } else {
+                Toast.makeText(getContext(), "Check your internet connection", Toast.LENGTH_SHORT).show();
+            }
+        }));
 
         return rootView;
     }
