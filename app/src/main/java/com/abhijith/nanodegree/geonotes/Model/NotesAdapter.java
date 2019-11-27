@@ -24,6 +24,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 public class NotesAdapter extends FirestoreRecyclerAdapter<Notes, NotesAdapter.NoteHolder> {
 
     private OnItemClickListener listener;
+    private OnItemLongPressListener longPressListener;
 
     public NotesAdapter(@NonNull FirestoreRecyclerOptions<Notes> options) {
         super(options);
@@ -74,6 +75,15 @@ public class NotesAdapter extends FirestoreRecyclerAdapter<Notes, NotesAdapter.N
                     listener.onItemClick(getSnapshots().getSnapshot(position), position);
                 }
             });
+
+            itemView.setOnLongClickListener(v -> {
+                int position = getAdapterPosition();
+                // send the click from adapter to activity/fragment
+                if (position != RecyclerView.NO_POSITION && listener != null) {
+                    longPressListener.onItemLongPress(getSnapshots().getSnapshot(position), position);
+                }
+                return true;
+            });
         }
 
         @Override
@@ -107,5 +117,14 @@ public class NotesAdapter extends FirestoreRecyclerAdapter<Notes, NotesAdapter.N
 
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.listener = listener;
+    }
+
+    // send the click from adapter to activity/fragment
+    public interface OnItemLongPressListener {
+        void onItemLongPress(DocumentSnapshot documentSnapshot, int position);
+    }
+
+    public void setOnLongPressListener(OnItemLongPressListener longPressListener) {
+        this.longPressListener = longPressListener;
     }
 }

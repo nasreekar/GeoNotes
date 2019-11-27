@@ -2,6 +2,9 @@ package com.abhijith.nanodegree.geonotes.Utils;
 
 public class Constants {
 
+    public static final String SHARED_PREFERENCES = "MyPrefs";
+    public static final String WIDGET_NOTES_SELECTED = "NotesList";
+
     // private constructor – this is to avoid clients from instantiating the class
     private Constants(){}
 

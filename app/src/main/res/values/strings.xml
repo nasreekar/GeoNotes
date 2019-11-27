@@ -57,5 +57,9 @@
     <string name="dialog_add_note_title">Add Notes</string>
     <string name="btn_submit">SUBMIT</string>
     <string name="btn_cancel">CANCEL</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+    <string name="add_to_widget">Are you sure you want to add this note to favorite and show it on widget?</string>
+    <string name="favorite_note">Favorite Note?</string>
 
 </resources>

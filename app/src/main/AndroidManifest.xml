@@ -6,6 +6,10 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/geonotes_logo"
@@ -13,9 +17,19 @@
         android:roundIcon="@drawable/geonotes_logo_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
+        <receiver android:name=".Widget.GeoNotesWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/geo_notes_widget_info" />
+        </receiver>
+
         <activity
             android:name=".View.RegisterActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".View.LoginActivity"
             android:screenOrientation="portrait" />
@@ -37,9 +51,5 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/API_KEY" />
     </application>
-
-    <uses-feature
-        android:glEsVersion="0x00020000"
-        android:required="true" /> <!-- OpenGL ES for rendering the maps -->
 
 </manifest>

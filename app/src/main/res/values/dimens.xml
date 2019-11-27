@@ -17,6 +17,12 @@
     <dimen name="dp_160">160dp</dimen>
 
     <!-- Font Sizes -->
-    <dimen name="font_32sp">32sp</dimen> <!-- Splash screen text -->
+    <dimen name="font_32sp">32sp</dimen>
+
+    <!--
+Refer to App Widget Documentation for margin information
+http://developer.android.com/guide/topics/appwidgets/index.html#CreatingLayout
+    -->
+    <dimen name="widget_margin">8dp</dimen> <!-- Splash screen text -->
 
 </resources>
