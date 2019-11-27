@@ -38,5 +38,21 @@
     <string name="software_developer">Software Developer(Android)</string>
     <string name="singapore">Singapore</string>
     <string name="developer_description">Android Application Developer with great passion for developing applications which makes users life easy.</string>
+    <string name="email_entry_message">Enter your email to reset password</string>
+    <string name="error_invalid_email">Invalid Email. Please check it once again</string>
+    <string name="error_user_exists">User doesn\'t exist</string>
+    <string name="note_added">Note added Successfully</string>
+    <string name="my_location">My Location</string>
+    <string name="error_empty_title">Title cannot be empty</string>
+    <string name="error_map_request">You can\'t make map requests</string>
+    <string name="message_email_check">Check Your Email</string>
+    <string name="message_login_success">Login successful!</string>
+    <string name="error_login_fail">Login failed! Please try again later</string>
+    <string name="error_missing_details_login">Please enter all details to login...</string>
+    <string name="error_firebase_auth">Auth Error</string>
+    <string name="message_register_email_entry">Please enter email...</string>
+    <string name="message_register_password_entry">Please enter password!</string>
+    <string name="message_register_success">Registration successful!</string>
+    <string name="error_registration_fail">Registration failed! Please try again later</string>
 
 </resources>

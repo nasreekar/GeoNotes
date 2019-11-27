@@ -234,7 +234,7 @@ public class FootprintFragment extends Fragment implements OnMapReadyCallback {
                     } else {
                         Log.d(TAG, "onComplete: current location is null");
                         Toast.makeText(getActivity(), getString(R.string.current_location_not_found), Toast.LENGTH_SHORT).show();
-                        moveCamera(new LatLng(Constants.DEFAULT_LATITUDE, Constants.DEFAULT_LONGITUDE), "My Location");
+                        moveCamera(new LatLng(Constants.DEFAULT_LATITUDE, Constants.DEFAULT_LONGITUDE), getString(R.string.my_location));
                     }
                 });
             }
@@ -287,14 +287,14 @@ public class FootprintFragment extends Fragment implements OnMapReadyCallback {
             String desc = description.getText().toString().trim(); //description
 
             if (TextUtils.isEmpty(heading)) {
-                Toast.makeText(this.getActivity(), "Title cannot be empty", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this.getActivity(), getString(R.string.error_empty_title), Toast.LENGTH_SHORT).show();
             } else {
                 Notes notes = new Notes(heading, desc, email, currentDate, location, String.valueOf(latLng.latitude), String.valueOf(latLng.longitude));
                 db.collection("notes")
                         .add(notes)
                         .addOnSuccessListener(documentReference -> {
                             Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
-                            Toast.makeText(this.getContext(), "Note added Successfully", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this.getContext(), getString(R.string.note_added), Toast.LENGTH_SHORT).show();
                             alert.dismiss();
                             moveCamera(new LatLng(latLng.latitude, latLng.longitude), title.toString());
                         })

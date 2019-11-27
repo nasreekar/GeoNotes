@@ -24,6 +24,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
@@ -96,15 +98,26 @@ public class LoginActivity extends AppCompatActivity {
         String emailaddress = etEmail.getText().toString().trim();
 
         if (TextUtils.isEmpty(emailaddress)) {
-            Toast.makeText(LoginActivity.this, "Enter your email to reset password", Toast.LENGTH_SHORT).show();
+            Toast.makeText(LoginActivity.this, getString(R.string.email_entry_message), Toast.LENGTH_SHORT).show();
         } else {
             firebaseAuth.sendPasswordResetEmail(emailaddress)
                     .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "Email sent.");
-                            Toast.makeText(LoginActivity.this, "Check Your Email", Toast.LENGTH_SHORT).show();
+
+                        if (!task.isSuccessful()) {
+                            try {
+                                throw task.getException();
+                            } catch (FirebaseAuthInvalidCredentialsException e) {
+                                etEmail.setError(getString(R.string.error_invalid_email));
+                                etEmail.requestFocus();
+                            } catch (FirebaseAuthUserCollisionException e) {
+                                etEmail.setError(getString(R.string.error_user_exists));
+                                etEmail.requestFocus();
+                            } catch (Exception e) {
+                                Log.e(TAG, e.getMessage());
+                            }
                         } else {
-                            Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            Log.d(TAG, "Email sent.");
+                            Toast.makeText(LoginActivity.this, getString(R.string.message_email_check), Toast.LENGTH_SHORT).show();
                         }
                     });
         }
@@ -124,18 +137,18 @@ public class LoginActivity extends AppCompatActivity {
             firebaseAuth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
-                            Toast.makeText(getApplicationContext(), "Login successful!", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), getString(R.string.message_login_success), Toast.LENGTH_LONG).show();
                             progressBar.setVisibility(View.GONE);
 
                             sendToMainActivity();
 
                         } else {
-                            Toast.makeText(getApplicationContext(), "Login failed! Please try again later", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), getString(R.string.error_login_fail), Toast.LENGTH_LONG).show();
                             progressBar.setVisibility(View.GONE);
                         }
                     });
         } else {
-            Toast.makeText(getApplicationContext(), "Please enter all details to login...", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), getString(R.string.error_missing_details_login), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -157,7 +170,7 @@ public class LoginActivity extends AppCompatActivity {
             if (task.isSuccessful()) {
                 sendToMainActivity();
             } else {
-                Toast.makeText(getApplicationContext(), "Auth Error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), getString(R.string.error_firebase_auth), Toast.LENGTH_SHORT).show();
             }
         });
     }

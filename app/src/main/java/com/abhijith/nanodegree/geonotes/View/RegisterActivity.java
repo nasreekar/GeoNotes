@@ -68,23 +68,23 @@ public class RegisterActivity extends AppCompatActivity {
         password = regPassword.getText().toString();
 
         if (TextUtils.isEmpty(email)) {
-            Toast.makeText(getApplicationContext(), "Please enter email...", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), getString(R.string.message_register_email_entry), Toast.LENGTH_LONG).show();
             return;
         }
         if (TextUtils.isEmpty(password)) {
-            Toast.makeText(getApplicationContext(), "Please enter password!", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), getString(R.string.message_register_password_entry), Toast.LENGTH_LONG).show();
             return;
         }
 
         firebaseAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        Toast.makeText(getApplicationContext(), "Registration successful!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), getString(R.string.message_register_success), Toast.LENGTH_LONG).show();
                         progressBar.setVisibility(View.GONE);
                         navigateToMainActivity();
 
                     } else {
-                        Toast.makeText(getApplicationContext(), "Registration failed! Please try again later", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), getString(R.string.error_registration_fail), Toast.LENGTH_LONG).show();
                         progressBar.setVisibility(View.GONE);
                     }
                 });

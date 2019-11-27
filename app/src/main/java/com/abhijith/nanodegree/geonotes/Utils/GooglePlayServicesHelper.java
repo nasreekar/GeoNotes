@@ -24,7 +24,7 @@ public class GooglePlayServicesHelper {
             Log.d(TAG, "isGooglePlayServicesAvailable: an error occurred but we can fix it");
             Toast.makeText(context, R.string.installGooglePlay_error, Toast.LENGTH_LONG).show();
         } else {
-            Toast.makeText(context, "You can't make map requests", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, R.string.error_map_request, Toast.LENGTH_SHORT).show();
         }
         return false;
     }
