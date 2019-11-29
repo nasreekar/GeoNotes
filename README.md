@@ -31,6 +31,7 @@ Few of the things that can be either modified or added are:
 2. Color coding of notes
 3. Better Architecture pattern (MVP/MVVM, SOLID etc)
 4. Update App widget to show a list of all notes added (only title) and clicking on any item to open details of the note
+5. Allow the user to set a note private so that its not displayed in other's map 
 
 ## Bugs
 There might be some bugs that would have crept in and went unnoticed while developing, but my highest priority is to implement the functionality as per requirements and these bugs would be fixed in coming updated versions/releases.
